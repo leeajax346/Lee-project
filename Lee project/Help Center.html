@@ -1,0 +1,489 @@
+at > /mnt/user-data/outputs/chat-app.html << 'EOF'
+<!DOCTYPE html>
+<html lang="rw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Ikiganiro</title>
+<style>
+:root{
+  --bg:#F2F4F1; --header-bg:#FFFFFF; --text:#1E2420; --muted:#6E7A72;
+  --accent:#2F5D50; --accent-text:#2F5D50;
+  --bubble-mine:#2F5D50; --bubble-mine-text:#FFFFFF;
+  --bubble-other:#FFFFFF; --bubble-other-text:#1E2420;
+  --border:#E1E5DF; --banner-bg:#FBEAE6; --banner-text:#8B3A26;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121614; --header-bg:#191E1B; --text:#EBEFEC; --muted:#93A099;
+    --accent:#3C7161; --accent-text:#7FD1A8;
+    --bubble-mine:#3C7161; --bubble-mine-text:#FFFFFF;
+    --bubble-other:#232A26; --bubble-other-text:#EBEFEC;
+    --border:#2A302B; --banner-bg:#3A231C; --banner-text:#F0B9A8;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121614; --header-bg:#191E1B; --text:#EBEFEC; --muted:#93A099;
+  --accent:#3C7161; --accent-text:#7FD1A8;
+  --bubble-mine:#3C7161; --bubble-mine-text:#FFFFFF;
+  --bubble-other:#232A26; --bubble-other-text:#EBEFEC;
+  --border:#2A302B; --banner-bg:#3A231C; --banner-text:#F0B9A8;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; height:100vh; height:100dvh; overflow:hidden;}
+.screen{height:100%; width:100%;}
+#loginScreen{display:flex; align-items:center; justify-content:center; padding:24px;}
+#chatScreen{display:none; flex-direction:column;}
+.login-card{max-width:320px; width:100%; text-align:center; background:var(--header-bg); border:1px solid var(--border); border-radius:16px; padding:32px 24px; display:flex; flex-direction:column; align-items:center;}
+.login-icon{font-size:36px; margin-bottom:8px;}
+.login-card h1{margin:0; font-size:20px;}
+.login-sub{color:var(--muted); font-size:13px; margin:4px 0 18px;}
+#loginDetected{display:none; flex-direction:column; align-items:center;}
+#loginGuest{display:none; width:100%;}
+#guestName{width:100%; border:1px solid var(--border); border-radius:10px; padding:10px 14px; font-size:15px; background:var(--bg); color:var(--text); outline:none; margin-bottom:16px;}
+#guestName:focus{border-color:var(--accent);}
+#loginDetectedName{font-weight:600; margin-bottom:18px;}
+#loginBtn{width:100%; background:var(--accent); color:#fff; border:none; border-radius:10px; padding:12px; font-size:15px; font-weight:600; cursor:pointer;}
+#loginBtn:disabled{opacity:0.5; cursor:default;}
+.login-error{color:var(--banner-text); font-size:12px; margin-top:12px;}
+header{background:var(--header-bg); border-bottom:1px solid var(--border); padding:14px 18px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;}
+header h1{font-size:17px; margin:0; font-weight:600;}
+header .sub{font-size:12px; color:var(--muted); margin-top:2px;}
+.header-right{display:flex; align-items:center; gap:6px; font-size:13px; color:var(--muted);}
+.avatar{width:26px; height:26px; border-radius:50%; flex-shrink:0; background:var(--border); object-fit:cover;}
+.avatar.small{width:22px; height:22px;}
+.avatar.large{width:56px; height:56px; margin-bottom:10px;}
+.avatar.initial{display:flex; align-items:center; justify-content:center; background:var(--accent); color:#fff; font-weight:600; font-size:12px;}
+.avatar.initial.large{font-size:22px;}
+#banner{display:none; padding:10px 18px; font-size:13px; background:var(--banner-bg); color:var(--banner-text); text-align:center; flex-shrink:0;}
+#messages{flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px;}
+.msg-row{display:flex; gap:8px; max-width:82%;}
+.msg-row.mine{align-self:flex-end; flex-direction:row-reverse;}
+.bubble-wrap{display:flex; flex-direction:column; min-width:0;}
+.sender{font-size:12px; color:var(--accent-text); margin-bottom:2px; font-weight:600;}
+.bubble{padding:8px 12px; border-radius:14px; font-size:15px; line-height:1.4; word-wrap:break-word; white-space:pre-wrap;}
+.mine .bubble{background:var(--bubble-mine); color:var(--bubble-mine-text); border-bottom-right-radius:4px;}
+.theirs .bubble{background:var(--bubble-other); color:var(--bubble-other-text); border:1px solid var(--border); border-bottom-left-radius:4px;}
+.quote{border-left:3px solid var(--accent-text); background:rgba(127,127,127,.12); border-radius:6px; padding:4px 8px; margin-bottom:3px;}
+.quote-name{color:var(--accent-text); font-weight:600; font-size:11px;}
+.quote-text{color:var(--muted); font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.reactions{font-size:13px; margin-top:2px;}
+.reaction-picker{display:flex; gap:4px; margin-top:4px; background:var(--header-bg); border:1px solid var(--border); border-radius:20px; padding:4px 8px; width:fit-content;}
+.reaction-opt{background:transparent; border:0; font-size:16px; cursor:pointer; padding:2px;}
+.time{font-size:10px; color:var(--muted); margin-top:3px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;}
+.mine .time{justify-content:flex-end;}
+.msg-action{background:transparent; border:0; color:var(--muted); font-size:11px; cursor:pointer; padding:0;}
+.msg-action:hover{color:var(--banner-text);}
+#empty{margin:auto; text-align:center; color:var(--muted); padding:40px;}
+#replyBar{display:none; align-items:center; justify-content:space-between; gap:8px; padding:8px 16px; background:var(--bg); border-top:1px solid var(--border); font-size:12px; color:var(--muted); flex-shrink:0;}
+#replyBarText{overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+#replyBarCancel{background:transparent; border:0; color:var(--muted); cursor:pointer; font-size:15px; flex-shrink:0;}
+form#composer{display:flex; gap:8px; padding:12px; border-top:1px solid var(--border); background:var(--header-bg); flex-shrink:0;}
+#text{flex:1; border:1px solid var(--border); border-radius:20px; padding:10px 16px; font-size:15px; background:var(--header-bg); color:var(--text); outline:none; min-width:0;}
+#text:focus{border-color:var(--accent);}
+button#send{background:var(--accent); color:#fff; border:none; width:40px; height:40px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px;}
+button#send:disabled{opacity:0.5; cursor:default;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-thumb{background:var(--border); border-radius:3px;}
+</style>
+</head>
+<body>
+
+<div id="loginScreen" class="screen">
+  <form class="login-card" id="loginForm">
+    <div class="login-icon">💬</div>
+    <h1>Ikiganiro</h1>
+    <p class="login-sub">Injira kugira ngo utangire kuganira</p>
+    <div id="loginDetected">
+      <img id="loginAvatar" class="avatar large" alt="">
+      <div id="loginDetectedName"></div>
+    </div>
+    <div id="loginGuest">
+      <input id="guestName" type="text" placeholder="Andika izina ryawe" maxlength="40" autocomplete="off">
+    </div>
+    <button id="loginBtn" type="submit" disabled>Injira</button>
+    <div id="loginError" class="login-error" style="display:none;"></div>
+  </form>
+</div>
+
+<div id="chatScreen" class="screen">
+  <header>
+    <div>
+      <h1>Ikiganiro</h1>
+      <div class="sub" id="subLine">Ikiganiro cy'itsinda</div>
+    </div>
+    <div class="header-right" id="meBox" style="display:none;">
+      <span class="avatar small initial" id="meInitial" style="display:none;"></span>
+      <img class="avatar small" id="meAvatar" alt="" style="display:none;">
+      <span id="meName"></span>
+    </div>
+  </header>
+  <div id="banner"></div>
+  <div id="messages"><div id="empty">Nta butumwa. Tangira ikiganiro!</div></div>
+  <div id="replyBar">
+    <span id="replyBarText"></span>
+    <button type="button" id="replyBarCancel" aria-label="Reka">✕</button>
+  </div>
+  <form id="composer">
+    <input id="text" type="text" placeholder="Andika ubutumwa..." maxlength="1000" autocomplete="off" disabled>
+    <button id="send" type="submit" disabled aria-label="Ohereza">➤</button>
+  </form>
+</div>
+
+<script>
+(async function(){
+  const loginScreen=document.getElementById('loginScreen');
+  const chatScreen=document.getElementById('chatScreen');
+  const loginForm=document.getElementById('loginForm');
+  const loginDetected=document.getElementById('loginDetected');
+  const loginGuest=document.getElementById('loginGuest');
+  const loginAvatar=document.getElementById('loginAvatar');
+  const loginDetectedName=document.getElementById('loginDetectedName');
+  const guestNameInput=document.getElementById('guestName');
+  const loginBtn=document.getElementById('loginBtn');
+  const loginError=document.getElementById('loginError');
+
+  const messagesEl=document.getElementById('messages');
+  const emptyEl=document.getElementById('empty');
+  const bannerEl=document.getElementById('banner');
+  const textEl=document.getElementById('text');
+  const sendBtn=document.getElementById('send');
+  const composer=document.getElementById('composer');
+  const subLineEl=document.getElementById('subLine');
+  const replyBar=document.getElementById('replyBar');
+  const replyBarText=document.getElementById('replyBarText');
+  let bannerTimer=null;
+
+  function showBanner(msg,autoHideMs){
+    bannerEl.textContent=msg;
+    bannerEl.style.display='block';
+    if(bannerTimer) clearTimeout(bannerTimer);
+    if(autoHideMs) bannerTimer=setTimeout(()=>{bannerEl.style.display='none';},autoHideMs);
+  }
+  function genId(){ return Date.now()+'-'+Math.random().toString(36).slice(2); }
+
+  let db=null, userCap=null, room=null, myId=null, myName='', myAvatar='', isGuest=false;
+
+  try{ db = window.claude ? await window.claude.use('db') : null; }catch(e){ db=null; }
+
+  if(!db){
+    loginError.textContent='Iki gikoresho ntigikora kuri iyi porogaramu ubu.';
+    loginError.style.display='block';
+    return;
+  }
+
+  try{ userCap = window.claude ? await window.claude.use('user') : null; }catch(e){ userCap=null; }
+  try{ room = window.claude ? await window.claude.use('room') : null; }catch(e){ room=null; }
+  if(userCap){
+    try{ myId = await userCap.id(); }catch(e){ myId=null; }
+  }
+
+  if(myId){
+    const me=await userCap.me();
+    myName=me.name||'Wowe';
+    myAvatar=me.avatarUrl||'';
+    loginAvatar.src=myAvatar;
+    loginDetectedName.textContent=myName;
+    loginDetected.style.display='flex';
+    loginBtn.disabled=false;
+  } else {
+    isGuest=true;
+    loginGuest.style.display='block';
+    const savedId=localStorage.getItem('chatapp_guest_id');
+    const savedName=localStorage.getItem('chatapp_guest_name');
+    if(savedId) myId=savedId;
+    if(savedName) guestNameInput.value=savedName;
+    guestNameInput.addEventListener('input', function(){
+      loginBtn.disabled = guestNameInput.value.trim().length===0;
+    });
+    loginBtn.disabled = guestNameInput.value.trim().length===0;
+    setTimeout(()=>guestNameInput.focus(),50);
+  }
+
+  function setAvatarEl(imgEl, initialEl, url, name){
+    if(url){
+      imgEl.src=url; imgEl.style.display='block'; initialEl.style.display='none';
+    } else {
+      initialEl.textContent=(name||'?').charAt(0).toUpperCase();
+      initialEl.style.display='flex'; imgEl.style.display='none';
+    }
+  }
+
+  let onlineNames=[], typingNames=[];
+  function updateSubLine(){
+    if(typingNames.length===1){ subLineEl.textContent=typingNames[0]+' arandika...'; return; }
+    if(typingNames.length>1){ subLineEl.textContent='Abantu barandika...'; return; }
+    if(onlineNames.length===0){ subLineEl.textContent="Ikiganiro cy'itsinda"; return; }
+    let shown=onlineNames.slice(0,2).join(', ');
+    if(onlineNames.length>2) shown+=" n'abandi "+(onlineNames.length-2);
+    subLineEl.textContent=shown+' kuri interineti';
+  }
+
+  function enterChat(){
+    loginScreen.style.display='none';
+    chatScreen.style.display='flex';
+    textEl.disabled=false;
+    sendBtn.disabled=false;
+    setAvatarEl(document.getElementById('meAvatar'), document.getElementById('meInitial'), myAvatar, myName);
+    document.getElementById('meName').textContent=myName||'Wowe';
+    document.getElementById('meBox').style.display='flex';
+    textEl.focus();
+    if(room){
+      room.presence({id:myId, name:myName});
+      room.onPeers(async function(change){
+        const seen=new Set();
+        const entries=[];
+        change.peers.forEach(function(p){
+          if(p.isMe) return;
+          const pid=(p.presence && p.presence.id) || p.peer;
+          if(seen.has(pid)) return;
+          seen.add(pid);
+          entries.push({id:pid, presenceName:(p.presence && p.presence.name)||'Umuntu', typing:!!(p.presence && p.presence.typing)});
+        });
+        const realIds=entries.filter(e=>!String(e.id).startsWith('guest-')).map(e=>e.id);
+        let profiles={};
+        if(userCap && realIds.length){ try{ profiles=await userCap.profiles(realIds); }catch(e){} }
+        onlineNames=entries.map(e=>(profiles[e.id] && profiles[e.id].name)||e.presenceName);
+        typingNames=entries.filter(e=>e.typing).map(e=>(profiles[e.id] && profiles[e.id].name)||e.presenceName);
+        updateSubLine();
+      });
+      let typingTimer=null;
+      textEl.addEventListener('input', function(){
+        room.presence({typing:true});
+        if(typingTimer) clearTimeout(typingTimer);
+        typingTimer=setTimeout(function(){ room.presence({typing:false}); }, 2500);
+      });
+    }
+  }
+
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(isGuest){
+      const name=guestNameInput.value.trim();
+      if(!name) return;
+      let gid=localStorage.getItem('chatapp_guest_id');
+      if(!gid){
+        gid='guest-'+Date.now()+'-'+Math.random().toString(36).slice(2);
+        localStorage.setItem('chatapp_guest_id', gid);
+      }
+      localStorage.setItem('chatapp_guest_name', name);
+      myId=gid; myName=name; myAvatar='';
+    }
+    enterChat();
+  });
+
+  const ref=db.doc('chat/main');
+  const REACTIONS=['👍','❤️','😂','😮','🙏'];
+  let replyingTo=null, reactingTo=null, lastList=[];
+
+  function showReplyPreview(){
+    if(!replyingTo){ replyBar.style.display='none'; return; }
+    replyBarText.textContent=replyingTo.name+': '+replyingTo.text.slice(0,60);
+    replyBar.style.display='flex';
+  }
+  document.getElementById('replyBarCancel').onclick=function(){ replyingTo=null; showReplyPreview(); };
+
+  async function editOwnMessage(id, oldText){
+    const next=prompt('Hindura ubutumwa:', oldText);
+    if(next===null) return;
+    const trimmed=next.trim();
+    if(!trimmed) return;
+    try{
+      const snap=await ref.get();
+      const current=(snap.exists && snap.data().messages)||[];
+      const idx=current.findIndex(m=>m.id===id);
+      if(idx===-1) return;
+      current[idx]={...current[idx], text:trimmed, edited:true};
+      await ref.set({messages:current});
+    }catch(err){ showBanner('Ntibishoboye guhindura ubutumwa.',4000); }
+  }
+
+  async function deleteOwnMessage(id){
+    if(!confirm('Wemeza gusiba ubu butumwa?')) return;
+    try{
+      const snap=await ref.get();
+      const current=(snap.exists && snap.data().messages)||[];
+      const updated=current.filter(m=>m.id!==id);
+      await ref.set({messages:updated});
+    }catch(err){ showBanner('Ntibishoboye gusiba ubutumwa.',4000); }
+  }
+
+  async function toggleReaction(msgId, emoji){
+    if(!myId) return;
+    try{
+      const snap=await ref.get();
+      const current=(snap.exists && snap.data().messages)||[];
+      const idx=current.findIndex(m=>m.id===msgId);
+      if(idx===-1) return;
+      const msg={...current[idx]};
+      const reactions={...(msg.reactions||{})};
+      if(reactions[myId]===emoji) delete reactions[myId]; else reactions[myId]=emoji;
+      msg.reactions=reactions;
+      current[idx]=msg;
+      await ref.set({messages:current});
+      reactingTo=null;
+    }catch(err){ showBanner('Ntibishoboye kongeraho ikimenyetso.',3000); }
+  }
+
+  async function renderMessages(list){
+    lastList=list;
+    if(!list.length){
+      messagesEl.innerHTML='';
+      messagesEl.appendChild(emptyEl);
+      return;
+    }
+    const ids=[...new Set(list.map(m=>m.senderId).filter(id=>!String(id).startsWith('guest-')))];
+    let profiles={};
+    if(userCap && ids.length){
+      try{ profiles = await userCap.profiles(ids); }catch(e){ profiles={}; }
+    }
+    messagesEl.innerHTML='';
+    for(const m of list){
+      const mine = m.senderId===myId;
+      const p=profiles[m.senderId];
+      const displayName=(p && p.name) || m.senderName || 'Umuntu';
+
+      const row=document.createElement('div');
+      row.className='msg-row '+(mine?'mine':'theirs');
+
+      if(p && p.avatarUrl){
+        const avatar=document.createElement('img');
+        avatar.className='avatar';
+        avatar.src=p.avatarUrl;
+        row.appendChild(avatar);
+      } else {
+        const initial=document.createElement('div');
+        initial.className='avatar initial';
+        initial.textContent=displayName.charAt(0).toUpperCase();
+        row.appendChild(initial);
+      }
+
+      const wrap=document.createElement('div');
+      wrap.className='bubble-wrap';
+
+      if(!mine){
+        const sender=document.createElement('div');
+        sender.className='sender';
+        sender.textContent=displayName;
+        wrap.appendChild(sender);
+      }
+
+      if(m.replyTo){
+        const quote=document.createElement('div');
+        quote.className='quote';
+        const qName=document.createElement('div'); qName.className='quote-name'; qName.textContent=m.replyTo.name;
+        const qText=document.createElement('div'); qText.className='quote-text';
+        qText.textContent=m.replyTo.text.length>80?m.replyTo.text.slice(0,80)+'…':m.replyTo.text;
+        quote.appendChild(qName); quote.appendChild(qText);
+        wrap.appendChild(quote);
+      }
+
+      const bubble=document.createElement('div');
+      bubble.className='bubble';
+      bubble.textContent=m.text;
+      wrap.appendChild(bubble);
+
+      if(m.reactions && Object.keys(m.reactions).length){
+        const chip=document.createElement('div');
+        chip.className='reactions';
+        const counts={};
+        Object.values(m.reactions).forEach(e=>{counts[e]=(counts[e]||0)+1;});
+        chip.textContent=Object.entries(counts).map(([e,c])=>c>1?e+c:e).join(' ');
+        wrap.appendChild(chip);
+      }
+
+      const timeRow=document.createElement('div');
+      timeRow.className='time';
+      const timeText=document.createElement('span');
+      const d=new Date(m.ts);
+      let t=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+      if(m.edited) t+=' · byahinduwe';
+      timeText.textContent=t;
+      timeRow.appendChild(timeText);
+
+      const reactBtn=document.createElement('button');
+      reactBtn.type='button'; reactBtn.className='msg-action'; reactBtn.textContent='😊';
+      reactBtn.setAttribute('aria-label','Ongeraho ikimenyetso');
+      reactBtn.onclick=()=>{ reactingTo=(reactingTo===m.id)?null:m.id; renderMessages(lastList); };
+      timeRow.appendChild(reactBtn);
+
+      const replyBtn=document.createElement('button');
+      replyBtn.type='button'; replyBtn.className='msg-action'; replyBtn.textContent='↩';
+      replyBtn.setAttribute('aria-label','Subiza');
+      replyBtn.onclick=()=>{ replyingTo={id:m.id, name:displayName, text:m.text}; showReplyPreview(); textEl.focus(); };
+      timeRow.appendChild(replyBtn);
+
+      if(mine && m.id){
+        const editBtn=document.createElement('button');
+        editBtn.type='button'; editBtn.className='msg-action'; editBtn.textContent='✎';
+        editBtn.setAttribute('aria-label','Hindura ubutumwa');
+        editBtn.onclick=()=>editOwnMessage(m.id, m.text);
+        timeRow.appendChild(editBtn);
+
+        const delBtn=document.createElement('button');
+        delBtn.type='button'; delBtn.className='msg-action'; delBtn.textContent='✕';
+        delBtn.setAttribute('aria-label','Siba ubutumwa');
+        delBtn.onclick=()=>deleteOwnMessage(m.id);
+        timeRow.appendChild(delBtn);
+      }
+      wrap.appendChild(timeRow);
+
+      if(reactingTo===m.id){
+        const picker=document.createElement('div');
+        picker.className='reaction-picker';
+        REACTIONS.forEach(em=>{
+          const b=document.createElement('button');
+          b.type='button'; b.className='reaction-opt'; b.textContent=em;
+          b.onclick=()=>toggleReaction(m.id, em);
+          picker.appendChild(b);
+        });
+        wrap.appendChild(picker);
+      }
+
+      row.appendChild(wrap);
+      messagesEl.appendChild(row);
+    }
+    messagesEl.scrollTop=messagesEl.scrollHeight;
+  }
+
+  ref.onSnapshot(function(snap){
+    const data=snap.data();
+    renderMessages((data && data.messages)||[]);
+  }, function(err){
+    showBanner('Ikibazo cyabaye mu gusoma ubutumwa.');
+  });
+
+  composer.addEventListener('submit', async function(e){
+    e.preventDefault();
+    const text=textEl.value.trim();
+    if(!text || !myId) return;
+    sendBtn.disabled=true;
+    if(room) room.presence({typing:false});
+    try{
+      const snap=await ref.get();
+      const current=(snap.exists && snap.data().messages)||[];
+      const msg={id:genId(), senderId:myId, text:text, ts:Date.now()};
+      if(isGuest) msg.senderName=myName;
+      if(replyingTo) msg.replyTo={id:replyingTo.id, name:replyingTo.name, text:replyingTo.text};
+      let updated=current.concat([msg]);
+      if(updated.length>150) updated=updated.slice(-150);
+      await ref.set({messages:updated});
+      textEl.value='';
+      replyingTo=null; showReplyPreview();
+    }catch(err){
+      showBanner('Ntibishoboye kohereza ubutumwa.',4000);
+    }finally{
+      sendBtn.disabled=false;
+      textEl.focus();
+    }
+  });
+})();
+</script>
+</body>
+</html>
+EOF
+echo "done"
+Output
+
+done

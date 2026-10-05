@@ -1,0 +1,2295 @@
+
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS — Electronics Shop</title>
+
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#080c10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NEXUS">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#080c10;--surface:#0e1419;--card:#131920;--border:#1e2a35;
+    --accent:#00d4ff;--accent2:#ff6b35;--text:#e8f0f7;--muted:#5a7a8a;
+    --success:#00e5a0;--admin:#a855f7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+  ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px;}
+  .page{display:none;}.page.active{display:block;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes gridPulse{0%,100%{opacity:0.3}50%{opacity:0.5}}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+
+  
+  #login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .login-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,#001a2e 0%,var(--bg) 70%);}
+  .grid-overlay{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:0.3;animation:gridPulse 4s ease-in-out infinite;}
+  .orb{position:absolute;border-radius:50%;filter:blur(80px);animation:float 6s ease-in-out infinite;}
+  .orb1{width:500px;height:500px;background:rgba(0,212,255,0.08);top:-100px;left:-100px;}
+  .orb2{width:400px;height:400px;background:rgba(255,107,53,0.06);bottom:-100px;right:-50px;animation-delay:-3s;}
+  .login-box{position:relative;z-index:10;width:420px;background:rgba(14,20,25,0.9);border:1px solid var(--border);border-radius:20px;padding:48px 40px;backdrop-filter:blur(20px);box-shadow:0 40px 80px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.05);animation:slideUp 0.6s cubic-bezier(0.16,1,0.3,1);}
+  .login-logo{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:6px;}
+  .login-logo span{color:var(--accent);}
+  .login-tagline{color:var(--muted);font-size:13px;margin-bottom:36px;}
+  .tab-switch{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:4px;margin-bottom:28px;}
+  .tab-btn{flex:1;padding:10px;background:none;border:none;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;border-radius:7px;transition:all 0.2s;}
+  .tab-btn.active{background:var(--card);color:var(--accent);}
+  .input-group{margin-bottom:16px;}
+  .input-group label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px;letter-spacing:0.5px;text-transform:uppercase;}
+  .input-group input,.input-group select,.input-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:13px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;transition:border-color 0.2s,box-shadow 0.2s;outline:none;}
+  .input-group select option{background:var(--surface);}
+  .input-group textarea{resize:vertical;min-height:80px;line-height:1.5;}
+  .input-group input:focus,.input-group select:focus,.input-group textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,255,0.1);}
+  .input-group input::placeholder,.input-group textarea::placeholder{color:var(--muted);}
+  .btn-primary{width:100%;background:linear-gradient(135deg,var(--accent),#0099cc);border:none;border-radius:10px;padding:14px;color:#000;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;transition:transform 0.15s,box-shadow 0.2s;letter-spacing:0.5px;}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,212,255,0.35);}
+  .divider{display:flex;align-items:center;gap:12px;margin:22px 0;color:var(--muted);font-size:12px;}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+  .btn-google{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background 0.2s,border-color 0.2s;}
+  .btn-google:hover{background:var(--card);border-color:var(--accent);}
+
+  
+  #store-page{min-height:100vh;}
+  nav{position:sticky;top:0;z-index:100;background:rgba(8,12,16,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .nav-logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+  .nav-logo span{color:var(--accent);}
+  .nav-search{flex:1;max-width:440px;margin:0 32px;position:relative;}
+  .nav-search input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 16px 10px 40px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;}
+  .nav-search input:focus{border-color:var(--accent);}
+  .nav-search input::placeholder{color:var(--muted);}
+  .search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);}
+  .nav-actions{display:flex;align-items:center;gap:12px;}
+  .cart-btn{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 18px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;font-size:14px;transition:border-color 0.2s;}
+  .cart-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .cart-count{background:var(--accent);color:#000;border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .admin-btn{background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);border-radius:10px;padding:9px 16px;color:var(--admin);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;display:flex;align-items:center;gap:7px;transition:all 0.2s;}
+  .admin-btn:hover{background:rgba(168,85,247,0.25);}
+  .user-avatar{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),#0099cc);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#000;}
+  .logout-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:7px 14px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;transition:all 0.2s;}
+  .logout-btn:hover{border-color:var(--accent2);color:var(--accent2);}
+
+  .hero{background:radial-gradient(ellipse 100% 80% at 50% -10%,#001a2e 0%,transparent 70%);padding:64px 48px 48px;text-align:center;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;opacity:0.15;}
+  .hero-content{position:relative;z-index:1;}
+  .hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.25);border-radius:50px;padding:6px 16px;font-size:12px;color:var(--accent);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:20px;}
+  .hero h1{font-family:'Syne',sans-serif;font-size:clamp(36px,5vw,64px);font-weight:800;line-height:1.05;letter-spacing:-2px;margin-bottom:16px;}
+  .hero h1 .glow{color:var(--accent);text-shadow:0 0 40px rgba(0,212,255,0.5);}
+  .hero p{color:var(--muted);font-size:16px;max-width:500px;margin:0 auto;}
+
+  .categories{display:flex;gap:10px;justify-content:center;padding:24px 32px;flex-wrap:wrap;}
+  .cat-btn{background:var(--surface);border:1px solid var(--border);border-radius:50px;padding:9px 22px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all 0.2s;display:flex;align-items:center;gap:7px;}
+  .cat-btn:hover,.cat-btn.active{background:rgba(0,212,255,0.1);border-color:var(--accent);color:var(--accent);}
+  
+  .products-section{padding:0 36px 64px;}
+  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+  .section-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;}
+  .product-count{color:var(--muted);font-size:13px;}
+  .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;}
+  .product-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform 0.25s,border-color 0.25s,box-shadow 0.25s;animation:fadeInUp 0.5s ease both;}
+  .product-card:hover{transform:translateY(-6px);border-color:rgba(0,212,255,0.4);box-shadow:0 20px 40px rgba(0,0,0,0.4);}
+  .product-image{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0d1821,#111e28);position:relative;overflow:hidden;}
+  .product-image img{width:100%;height:100%;object-fit:cover;transition:transform 0.4s;}
+  .product-card:hover .product-image img{transform:scale(1.05);}
+  .product-image .emoji-fallback{font-size:72px;}
+  .product-badge{position:absolute;top:12px;left:12px;background:var(--accent2);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;text-transform:uppercase;letter-spacing:0.5px;z-index:1;}
+  .product-info{padding:18px;}
+  .product-brand{font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+  .product-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:600;margin-bottom:8px;line-height:1.3;}
+  .product-specs-preview{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6;}
+  .product-footer{display:flex;align-items:center;justify-content:space-between;}
+  .product-price{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--accent);}
+  .product-price span{font-size:13px;font-weight:400;color:var(--muted);}
+  .add-btn{background:var(--accent);border:none;border-radius:8px;width:36px;height:36px;color:#000;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;transition:transform 0.15s,box-shadow 0.2s;}
+  .add-btn:hover{transform:scale(1.1);box-shadow:0 4px 12px rgba(0,212,255,0.5);}
+
+  .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);align-items:center;justify-content:center;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:24px;width:90%;max-width:600px;max-height:88vh;overflow-y:auto;animation:slideUp 0.35s cubic-bezier(0.16,1,0.3,1);}
+  .modal-img{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0d1821,#111e28);display:flex;align-items:center;justify-content:center;border-radius:24px 24px 0 0;overflow:hidden;}
+  .modal-img img{width:100%;height:100%;object-fit:cover;}
+  .modal-img .emoji-lg{font-size:100px;}
+  .modal-body{padding:28px 32px;}
+  .modal-brand{font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
+  .modal-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;margin-bottom:12px;letter-spacing:-0.5px;}
+  .modal-price{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--accent);margin-bottom:20px;}
+  .modal-specs{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:24px;}
+  .spec-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+  .spec-row:last-child{border-bottom:none;}
+  .spec-row .key{color:var(--muted);}
+  .modal-actions{display:flex;gap:12px;}
+  .btn-add-cart{flex:1;background:linear-gradient(135deg,var(--accent),#0099cc);border:none;border-radius:12px;padding:14px;color:#000;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:transform 0.15s,box-shadow 0.2s;}
+  .btn-add-cart:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,212,255,0.35);}
+  .btn-close-modal{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 20px;color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;transition:border-color 0.2s;}
+  .btn-close-modal:hover{border-color:var(--accent2);color:var(--accent2);}
+  .cart-item{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);}
+  .cart-item:last-child{border-bottom:none;}
+  .cart-thumb{width:60px;height:60px;border-radius:10px;background:var(--card);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+  .cart-thumb img{width:100%;height:100%;object-fit:cover;}
+  .cart-item-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;margin-bottom:3px;}
+  .cart-item-price{color:var(--accent);font-size:15px;font-weight:700;}
+  .remove-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;transition:color 0.2s;margin-left:auto;}
+  .remove-btn:hover{color:var(--accent2);}
+  .qty-stepper{display:flex;align-items:center;gap:8px;margin-top:4px;}
+  .qty-btn{background:var(--card);border:1px solid var(--border);border-radius:6px;width:24px;height:24px;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;transition:all 0.15s;line-height:1;}
+  .qty-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .qty-val{font-size:13px;font-weight:600;min-width:16px;text-align:center;}
+  .cart-total{display:flex;justify-content:space-between;align-items:center;padding:16px 0 0;font-family:'Syne',sans-serif;font-size:18px;font-weight:700;}
+  .cart-total .total-label{color:var(--muted);}
+  .cart-total .total-val{color:var(--accent);font-size:24px;}
+  #admin-page{min-height:100vh;}
+  .admin-nav{position:sticky;top:0;z-index:100;background:rgba(8,12,16,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(168,85,247,0.3);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .admin-nav-logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;}
+  .admin-nav-logo span{color:var(--admin);}
+  .back-btn{background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.4);border-radius:10px;padding:9px 18px;color:var(--admin);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;transition:all 0.2s;}
+  .back-btn:hover{background:rgba(168,85,247,0.3);}
+  .admin-content{padding:40px 32px;}
+  .admin-header{margin-bottom:36px;}
+  .admin-header h2{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:8px;}
+  .admin-header p{color:var(--muted);font-size:14px;}
+  .admin-layout{display:grid;grid-template-columns:420px 1fr;gap:32px;align-items:start;}
+
+  .admin-form-card{background:var(--surface);border:1px solid rgba(168,85,247,0.25);border-radius:20px;padding:28px;}
+  .form-card-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:20px;}
+  .form-card-title span{color:var(--admin);}
+
+  .img-source-tabs{display:flex;gap:8px;margin-bottom:10px;}
+  .img-src-btn{flex:1;padding:9px;background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;text-align:center;}
+  .img-src-btn.active{background:rgba(168,85,247,0.15);border-color:var(--admin);color:var(--admin);}
+  .img-preview-box{width:100%;aspect-ratio:16/9;background:var(--card);border:2px dashed var(--border);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:14px;overflow:hidden;position:relative;transition:border-color 0.2s;}
+  .img-preview-box img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+  .preview-placeholder{color:var(--muted);font-size:13px;text-align:center;}
+  .preview-icon{font-size:32px;}
+  .file-label{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--card);border:1px dashed var(--border);border-radius:10px;padding:12px;color:var(--muted);font-size:13px;cursor:pointer;transition:border-color 0.2s;margin-bottom:14px;}
+  .file-label:hover{border-color:var(--admin);color:var(--admin);}
+  #file-input{display:none;}
+  .specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .specs-label{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:8px;margin-top:4px;}
+
+  .btn-save{width:100%;background:linear-gradient(135deg,var(--admin),#7c3aed);border:none;border-radius:10px;padding:14px;color:#fff;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;transition:transform 0.15s,box-shadow 0.2s;}
+  .btn-save:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(168,85,247,0.4);}
+  .btn-cancel{width:100%;background:none;border:1px solid var(--border);border-radius:10px;padding:12px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;margin-top:8px;transition:all 0.2s;}
+  .btn-cancel:hover{border-color:var(--accent2);color:var(--accent2);}
+
+  .admin-table-card{background:var(--surface);border:1px solid rgba(168,85,247,0.25);border-radius:20px;overflow:hidden;}
+  .table-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .table-header h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;}
+  .count-badge{background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3);border-radius:50px;padding:4px 12px;font-size:12px;color:var(--admin);}
+  .admin-row{display:flex;align-items:center;gap:14px;padding:14px 24px;border-bottom:1px solid var(--border);transition:background 0.15s;}
+  .admin-row:last-child{border-bottom:none;}
+  .admin-row:hover{background:rgba(255,255,255,0.02);}
+  .admin-thumb{width:50px;height:50px;border-radius:10px;background:var(--card);border:1px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .admin-thumb img{width:100%;height:100%;object-fit:cover;}
+  .row-info{flex:1;min-width:0;}
+  .row-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .row-meta{font-size:12px;color:var(--muted);margin-top:2px;}
+  .row-price{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--accent);white-space:nowrap;margin-right:8px;}
+  .row-btns{display:flex;gap:6px;}
+  .btn-edit{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.3);border-radius:7px;padding:6px 12px;color:var(--accent);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+  .btn-edit:hover{background:rgba(0,212,255,0.2);}
+  .btn-del{background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.3);border-radius:7px;padding:6px 12px;color:var(--accent2);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+  .btn-del:hover{background:rgba(255,107,53,0.2);}
+  .empty-state{padding:48px 24px;text-align:center;color:var(--muted);}
+  .empty-state .ei{font-size:40px;margin-bottom:12px;}
+
+  .toast{position:fixed;top:80px;right:24px;z-index:300;background:var(--success);color:#000;padding:12px 20px;border-radius:10px;font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px;transform:translateX(200%);transition:transform 0.3s cubic-bezier(0.16,1,0.3,1);}
+  .toast.show{transform:translateX(0);}
+
+  @media(max-width:900px){.admin-layout{grid-template-columns:1fr;}}
+  @media(max-width:640px){nav,.admin-nav{padding:0 14px;}.nav-search{max-width:140px;margin:0 8px;}.hero{padding:40px 20px 32px;}.products-section,.admin-content{padding:0 16px 48px;}.categories{padding:16px;}.login-box{width:92%;padding:36px 24px;}}
+
+  #google-auth-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(8,12,16,0.97);backdrop-filter:blur(20px);align-items:center;justify-content:center;flex-direction:column;gap:24px;}
+  #google-auth-overlay.show{display:flex;}
+  .google-spinner{width:56px;height:56px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.9s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .google-auth-text{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text);}
+  .google-auth-sub{font-size:13px;color:var(--muted);margin-top:-16px;}
+
+  /* Admin password gate */
+  #admin-gate-overlay{display:none;position:fixed;inset:0;z-index:600;background:rgba(8,12,16,0.97);backdrop-filter:blur(20px);align-items:center;justify-content:center;}
+  #admin-gate-overlay.show{display:flex;}
+  .admin-gate-box{width:380px;max-width:90%;background:rgba(14,20,25,0.95);border:1px solid rgba(168,85,247,0.3);border-radius:20px;padding:36px 32px;animation:slideUp 0.35s cubic-bezier(0.16,1,0.3,1);}
+  .admin-gate-icon{font-size:32px;margin-bottom:12px;}
+  .admin-gate-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;}
+  .admin-gate-sub{color:var(--muted);font-size:13px;margin-bottom:22px;}
+  .admin-gate-error{color:var(--accent2);font-size:12px;margin-top:8px;min-height:16px;}
+  .btn-gate-submit{width:100%;background:linear-gradient(135deg,var(--admin),#7c3aed);border:none;border-radius:10px;padding:13px;color:#fff;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:14px;}
+  .btn-gate-cancel{width:100%;background:none;border:1px solid var(--border);border-radius:10px;padding:11px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:8px;}
+
+  .input-group input.field-error,.input-group select.field-error,.input-group textarea.field-error{border-color:var(--accent2)!important;box-shadow:0 0 0 3px rgba(255,107,53,0.12)!important;}
+
+  /* Language switcher */
+  .lang-switch{position:relative;}
+  .lang-btn{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:9px 14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:13px;transition:border-color 0.2s;}
+  .lang-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .lang-menu{display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:6px;min-width:170px;box-shadow:0 20px 40px rgba(0,0,0,0.5);z-index:150;}
+  .lang-menu.open{display:block;}
+  .lang-option{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;border-radius:8px;padding:10px 12px;color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;text-align:left;transition:background 0.15s;}
+  .lang-option:hover{background:rgba(0,212,255,0.1);}
+  .lang-option.active{color:var(--accent);background:rgba(0,212,255,0.08);}
+  .lang-flag{font-size:16px;}
+
+  /* ---- Payment method (Mobile Money) ---- */
+  .pay-method-tabs{display:flex;gap:8px;margin-top:4px;}
+  .pay-method-btn{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 6px;color:var(--muted);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.2s;text-align:center;line-height:1.4;}
+  .pay-method-btn:hover{border-color:var(--accent);color:var(--text);}
+  .pay-method-btn.active{background:rgba(0,212,255,0.1);border-color:var(--accent);color:var(--accent);}
+  .pay-instructions-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:12.5px;line-height:1.7;color:var(--text);margin-top:10px;}
+  .pay-instructions-box b{color:var(--accent);}
+  .pay-status-note{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5;}
+
+  /* ---- Store settings card (Admin) ---- */
+  .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .settings-hint{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6;}
+
+  /* ---- WhatsApp ---- */
+  .whatsapp-float{position:fixed;bottom:24px;right:24px;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;text-decoration:none;box-shadow:0 8px 24px rgba(37,211,102,0.45);z-index:150;transition:transform 0.2s,box-shadow 0.2s;border:none;cursor:pointer;}
+  .whatsapp-float:hover{transform:scale(1.08);box-shadow:0 10px 28px rgba(37,211,102,0.6);}
+  .btn-whatsapp{background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.4);border-radius:12px;padding:14px;color:#25D366;cursor:pointer;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;transition:all 0.2s;}
+  .btn-whatsapp:hover{background:rgba(37,211,102,0.22);}
+  .row-whatsapp-btn{background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.4);border-radius:7px;padding:6px 12px;color:#25D366;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+  .row-whatsapp-btn:hover{background:rgba(37,211,102,0.22);}
+
+  /* ---- PWA install banner ---- */
+  #pwa-install-banner{display:none;background:rgba(0,212,255,0.08);border-bottom:1px solid rgba(0,212,255,0.25);padding:10px 20px;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;font-size:13px;text-align:center;}
+  #pwa-install-banner.show{display:flex;}
+  .pwa-install-btn{background:var(--accent);border:none;border-radius:8px;padding:7px 16px;color:#000;font-weight:700;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;}
+  .pwa-dismiss-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:7px 14px;color:var(--muted);cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;}
+
+  @media(max-width:640px){.whatsapp-float{bottom:16px;right:16px;width:50px;height:50px;font-size:22px;}.settings-grid{grid-template-columns:1fr;}}
+
+  /* ---- Chat (Firebase-backed, phone number based) ---- */
+  .chat-btn{background:rgba(0,229,160,0.12);border:1px solid rgba(0,229,160,0.35);border-radius:10px;padding:9px 16px;color:var(--success);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;display:flex;align-items:center;gap:7px;transition:all 0.2s;}
+  .chat-btn:hover{background:rgba(0,229,160,0.22);}
+  .chat-modal .modal{max-width:420px;width:92%;height:640px;max-height:88vh;display:flex;flex-direction:column;}
+  .chat-modal .modal-body{padding:0;display:flex;flex-direction:column;flex:1;min-height:0;}
+  .chat-head{padding:20px 22px 16px;border-bottom:1px solid var(--border);flex-shrink:0;}
+  .chat-head-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;}
+  .chat-head-sub{font-size:12px;color:var(--muted);margin-top:6px;}
+  .chat-join{padding:24px;}
+  .chat-join p{color:var(--muted);font-size:12.5px;line-height:1.6;margin:6px 0 18px;}
+  .chat-contacts{flex:1;overflow-y:auto;min-height:0;}
+  .chat-contact-row{display:flex;align-items:center;gap:12px;padding:14px 22px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;}
+  .chat-contact-row:hover{background:rgba(0,212,255,0.05);}
+  .chat-contact-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--success),#00a878);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;color:#000;flex-shrink:0;font-size:14px;}
+  .chat-contact-phone{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;}
+  .chat-contact-meta{font-size:11px;color:var(--muted);margin-top:2px;}
+  .chat-empty{padding:40px 24px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6;}
+  .chat-thread-head{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);flex-shrink:0;}
+  .chat-back-btn{background:var(--card);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;color:var(--text);cursor:pointer;font-size:16px;flex-shrink:0;}
+  .chat-thread-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;}
+  .chat-messages{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-height:0;}
+  .chat-bubble{max-width:78%;padding:9px 13px;border-radius:14px;font-size:13.5px;line-height:1.5;word-wrap:break-word;}
+  .chat-bubble.mine{align-self:flex-end;background:linear-gradient(135deg,var(--accent),#0099cc);color:#000;border-bottom-right-radius:4px;}
+  .chat-bubble.theirs{align-self:flex-start;background:var(--card);border:1px solid var(--border);border-bottom-left-radius:4px;}
+  .chat-bubble-time{display:block;font-size:9.5px;opacity:0.6;margin-top:3px;}
+  .chat-input-row{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--border);flex-shrink:0;}
+  .chat-input-row input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:10px 16px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;}
+  .chat-input-row input:focus{border-color:var(--accent);}
+  .chat-send-btn{background:var(--accent);border:none;border-radius:50%;width:38px;height:38px;color:#000;cursor:pointer;font-size:15px;flex-shrink:0;}
+  .chat-leave-link{background:none;border:none;color:var(--muted);font-size:11px;cursor:pointer;text-decoration:underline;padding:0;}
+  .chat-setup-warning{background:rgba(255,107,53,0.1);border:1px solid rgba(255,107,53,0.35);border-radius:10px;padding:14px 16px;font-size:12px;line-height:1.6;color:var(--text);margin:20px;}
+  @media(max-width:640px){.chat-modal .modal{height:80vh;}}
+
+</style>
+</head>
+<body>
+  
+
+<div id="store-page" class="page active">
+  <div id="pwa-install-banner">
+    <span>📲 Install NEXUS on your phone for quick, app-like access</span>
+    <button class="pwa-install-btn" onclick="triggerPWAInstall()">Install</button>
+    <button class="pwa-dismiss-btn" onclick="dismissInstallBanner()">Not now</button>
+  </div>
+  <button class="whatsapp-float" id="whatsapp-float" onclick="openStoreWhatsApp()" title="Chat with us on WhatsApp" style="display:none">💬</button>
+  <nav>
+    <div class="nav-logo">NEX<span>US</span></div>
+    <div class="nav-search">
+      <svg class="search-icon" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+      <input type="text" placeholder="search product..." oninput="searchProducts(this.value)">
+    </div>
+    <div class="nav-actions">
+      <div class="lang-switch">
+        <button class="lang-btn" id="lang-btn" onclick="toggleLangMenu(event)">
+          <span class="lang-flag" id="lang-flag-current">🌐</span>
+          <span id="lang-label-current">Language</span>
+          <span class="arrow">▾</span>
+        </button>
+        <div class="lang-menu" id="lang-menu">
+          <button class="lang-option active" data-lang="en" onclick="setLanguage('en')">
+            <span class="lang-flag">.</span><span>English</span>
+          </button>
+          <button class="lang-option" data-lang="fr" onclick="setLanguage('fr')">
+            <span class="lang-flag">.</span><span>Français</span>
+          </button>
+          <button class="lang-option" data-lang="rw" onclick="setLanguage('rw')">
+            <span class="lang-flag">.</span><span>Ikinyarwanda</span>
+          </button>
+        </div>
+      </div>
+
+      <button class="chat-btn" onclick="openChatHub()">💬 Chat</button>
+      <button class="admin-btn" onclick="openAdmin()">⚙️ Admin Panel</button>
+      <button class="cart-btn" id="last-order-btn" style="display: flex;" onclick="reopenLastReceipt()">🧾 My Last Order</button>
+      <button class="cart-btn" onclick="openCart()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        Cart <span class="cart-count" id="cart-count">0</span>
+      </button>
+      <a href="Logout.html"><button class="logout-btn" onclick="logout()">Logout</button></a>
+    </div>
+  </nav>
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">⚡  Nexus  Electronics Shop</div>
+      <h1>Nex-us<br><span class="glow">Electronics</span></h1>
+      <p>Explore premium devices — phones, laptops, TVs and more.</p>
+    </div>
+  </div>
+  <div class="categories">
+    <button class="cat-btn active" onclick="filterCat('all',this)">🏠 All Devices</button>
+    <button class="cat-btn" onclick="filterCat('phones',this)">📱 Phones &amp; Tablets</button>
+    <button class="cat-btn" onclick="filterCat('laptops',this)">💻 Laptops</button>
+    <button class="cat-btn" onclick="filterCat('tvs',this)">📺 TVs &amp; Screens</button>
+    <button class="cat-btn" onclick="filterCat('accessories',this)">🎧 Accessories</button>
+  </div>
+  <div class="products-section">
+    <div class="section-header">
+      <div class="section-title">Featured Products</div>
+      <div class="product-count" id="product-count"> products</div>
+    </div>
+    <div class="products-grid" id="products-grid">
+    </div>
+  </div>
+</div>
+
+<div id="admin-page" class="page">
+  <div class="admin-nav">
+    <div class="admin-nav-logo">NEXUS <span>Admin</span></div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="lang-switch">
+        <button class="lang-btn" id="notif-btn" onclick="toggleNotifMenu(event)">
+          🔔 <span id="notif-badge" style="background:var(--accent2);color:#fff;border-radius:50%;min-width:16px;height:16px;font-size:10px;display:none;align-items:center;justify-content:center;padding:0 4px;margin-left:2px;">0</span>
+        </button>
+        <div class="lang-menu" id="notif-menu" style="min-width:300px;max-height:360px;overflow-y:auto">
+          <div style="padding:10px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);margin-bottom:4px;">
+            <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;">Notifications</span>
+            <button onclick="requestDesktopNotifPermission()" style="background:none;border:none;color:var(--accent);font-size:11px;cursor:pointer;">Enable desktop alerts</button>
+          </div>
+          <div id="notif-list"></div>
+        </div>
+      </div>
+      <button class="back-btn" onclick="closeAdmin()">← Back to Shop</button>
+    </div>
+  </div>
+  <div class="admin-content">
+    <div class="admin-header">
+      <h2>🗂️ Product Manager</h2>
+      <p>Add new products with images, edit details, or remove products from the store.</p>
+      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;align-items:center;">
+        <button class="back-btn" onclick="exportData()">⬇️ Backup Data (Export JSON)</button>
+        <button class="back-btn" onclick="document.getElementById('import-file-input').click()">⬆️ Restore Data (Import JSON)</button>
+        <button class="back-btn" type="button" onclick="document.getElementById('nexus-tools-modal').classList.add('open');document.getElementById('nexus-tools-modal').setAttribute('aria-hidden','false');">⚙️ Store Tools</button>
+        <input type="file" id="import-file-input" accept="application/json" style="display:none" onchange="importData(this)">
+        <span style="font-size:11px;color:var(--muted);">Everything is stored only in this browser — download a backup regularly so you never lose it.</span>
+        These numbers are shown to customers at checkout and power the WhatsApp buttons across the site. ⚠️ Mobile Money payments are confirmed <b style="color:var(--text)">manually</b> for now: check your own MoMo/Airtel SMS, then mark the order "Confirmed" in the Order History table below. Automatic, instant confirmation needs a real backend server connected to the MTN MoMo / Airtel Money Collections API — ask if you'd like help planning that next step.
+      </div>
+    </div>
+    <div id="dashboard-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:32px;"></div>
+        <div class="admin-form-card" id="settings-card" style="margin-bottom:32px;">
+      <div class="form-card-title">⚙️ <span>Shop Settings — Payments &amp; WhatsApp</span></div>
+      <div class="settings-grid">
+        <div class="input-group"><label>Store WhatsApp Number</label><input type="text" id="s-whatsapp" placeholder="e.g. 0788123456"></div>
+        <div class="input-group"><label>Airtel Money Number</label><input type="text" id="s-airtel" placeholder="e.g. 0738123456"></div>
+        <div class="input-group"><label>MTN MoMo Pay Code / Number</label><input type="text" id="s-momocode" placeholder="e.g. 123456 or 0788123456"></div>
+        <div class="input-group" style="margin-bottom:0"><label>Name Registered on MTN MoMo</label><input type="text" id="s-momoname" placeholder="e.g. NEXUS Electronics Ltd"></div>
+      </div>
+      <button class="btn-save" onclick="saveStoreSettings()">💾 Save Settings</button>
+      <div class="settings-hint">
+      
+      </div>
+    </div>
+
+    <div class="admin-layout">
+
+      <div class="admin-form-card">
+        <div class="form-card-title" id="form-title">➕ <span>Add New Product</span></div>
+
+        <div class="img-source-tabs">
+          <button class="img-src-btn active" onclick="setImgSrc('upload',this)">📁 Upload from Computer</button>
+          <button class="img-src-btn" onclick="setImgSrc('url',this)">🔗 Paste Image URL</button>
+        </div>
+        <div id="upload-section">
+          <input type="file" id="file-input" accept="image/*" onchange="handleFile(this)">
+          <label for="file-input" class="file-label">📂 Click to choose an image file from your computer</label>
+          <div style="font-size:11px;color:var(--muted);margin-top:-8px;margin-bottom:14px;line-height:1.5;">⚠️ Uploaded images are stored as data in your browser. For many products, prefer "Paste Image URL" to avoid filling up storage.</div>
+        </div>
+        <div id="url-section" style="display:none">
+          <div class="input-group"><input type="text" id="url-input" placeholder="https://example.com/device.jpg" oninput="previewFromUrl(this.value)"></div>
+        </div>
+        <div class="img-preview-box" id="img-preview">
+          <div class="preview-icon">🖼️</div>
+          <div class="preview-placeholder">Image preview appears here</div>
+        </div>
+        <input type="hidden" id="form-img">
+
+        <div class="input-group"><label>Product Name *</label><input type="text" id="f-name" placeholder="e.g. iPhone 15 Pro Max" maxlength="80"></div>
+        <div class="input-group"><label>Brand *</label><input type="text" id="f-brand" placeholder="e.g. Apple" maxlength="40"></div>
+        <div class="input-group">
+          <label>Category *</label>
+          <select id="f-cat">
+            <option value="phones">📱 Phones &amp; Tablets</option>
+            <option value="laptops">💻 Laptops</option>
+            <option value="tvs">📺 TVs &amp; Screens</option>
+            <option value="accessories">🎧 Accessories</option>
+          </select>
+        </div>
+        <div class="input-group"><label>Price in USD *</label><input type="number" id="f-price" placeholder="e.g. 999" min="0"></div>
+        <div class="input-group"><label>Stock Quantity *</label><input type="number" id="f-stock" placeholder="e.g. 10" min="0" step="1"></div>
+        <div class="input-group"><label>Badge label (optional)</label><input type="text" id="f-badge" placeholder="e.g. New, Hot, Sale, Best ANC" maxlength="20"></div>
+
+        <div class="specs-label">📋 SPECIFICATIONS (up to 5 key-value pairs)</div>
+        <div class="specs-grid">
+          <div class="input-group"><label>Key 1</label><input type="text" id="k1" placeholder="Display" maxlength="30"></div>
+          <div class="input-group"><label>Value 1</label><input type="text" id="v1" placeholder="6.7&quot; OLED" maxlength="60"></div>
+          <div class="input-group"><label>Key 2</label><input type="text" id="k2" placeholder="Chip" maxlength="30"></div>
+          <div class="input-group"><label>Value 2</label><input type="text" id="v2" placeholder="A17 Pro" maxlength="60"></div>
+          <div class="input-group"><label>Key 3</label><input type="text" id="k3" placeholder="Storage" maxlength="30"></div>
+          <div class="input-group"><label>Value 3</label><input type="text" id="v3" placeholder="256GB" maxlength="60"></div>
+          <div class="input-group"><label>Key 4</label><input type="text" id="k4" placeholder="Camera" maxlength="30"></div>
+          <div class="input-group"><label>Value 4</label><input type="text" id="v4" placeholder="48MP Triple" maxlength="60"></div>
+          <div class="input-group"><label>Key 5</label><input type="text" id="k5" placeholder="Battery" maxlength="30"></div>
+          <div class="input-group"><label>Value 5</label><input type="text" id="v5" placeholder="4422 mAh" maxlength="60"></div>
+        </div>
+
+        <button class="btn-save" id="btn-save" onclick="saveProduct()">💾 Save Product</button>
+        <button class="btn-cancel" id="btn-cancel" onclick="cancelEdit()" style="display:none">✕ Cancel Edit</button>
+      </div>
+
+      <!-- PRODUCT TABLE -->
+      <div class="admin-table-card">
+        <div class="table-header">
+          <h3>All Products</h3>
+          <div class="count-badge" id="admin-count">0 products</div>
+        </div>
+        <div style="padding:14px 24px;border-bottom:1px solid var(--border)">
+          <input type="text" id="admin-product-search" placeholder="🔍 Search by name or brand..." oninput="renderAdminList()" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+        </div>
+        <div id="admin-list"></div>
+      </div>
+
+      <!-- ORDER HISTORY -->
+      <div class="admin-table-card" style="grid-column:1/-1;margin-top:0">
+        <div class="table-header">
+          <h3>🧾 Order History — who choose what</h3>
+          <div class="count-badge" id="orders-count">0 orders</div>
+        </div>
+        <div style="padding:14px 24px;border-bottom:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap;">
+          <input type="text" id="admin-order-search" placeholder="🔍 Search by customer name or phone..." oninput="renderOrders()" style="flex:1;min-width:200px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+          <select id="admin-order-status-filter" onchange="renderOrders()" style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;">
+            <option value="all">All statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Awaiting Payment">Awaiting Payment</option>
+            <option value="Confirmed">Confirmed</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled X</option>
+          </select>
+        </div>
+        <div id="orders-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal">
+    <div class="modal-img" id="modal-img"></div>
+    <div class="modal-body">
+      <div class="modal-brand" id="modal-brand"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-price" id="modal-price"></div>
+      <div class="modal-specs" id="modal-specs"></div>
+      <div class="modal-actions">
+        <button class="btn-add-cart" id="modal-add-btn">🛒 Add to Cart</button>
+        <button class="btn-close-modal" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART MODAL -->
+<div class="modal-overlay" id="cart-modal">
+  <div class="modal">
+    <div class="modal-body">
+      <div class="modal-title" style="margin-bottom:20px">🛒 Your Cart</div>
+      <div id="cart-list"></div>
+      <div class="cart-total"><span class="total-label">Total</span><span class="total-val" id="cart-total">$0</span></div>
+      <div id="checkout-id-fields" style="margin-top:18px">
+        <div class="input-group"><label>Your Name *</label><input type="text" id="co-name" placeholder="" maxlength="60"></div>
+        <div class="input-group"><label>Phone Number *</label><input type="text" id="co-phone" placeholder="" maxlength="20"></div>
+        <div class="input-group" style="margin-bottom:0"><label>Delivery Address *</label><textarea id="co-address" placeholder=" " maxlength="200"></textarea></div>
+      </div>
+      <div class="input-group" style="margin-top:16px;margin-bottom:0">
+        <label>Payment Method *</label>
+        <div class="pay-method-tabs">
+          <button type="button" class="pay-method-btn active" data-method="cod" onclick="setPaymentMethod('cod',this)"> Cash / Pickup</button>
+          <button type="button" class="pay-method-btn" data-method="momo" onclick="setPaymentMethod('momo',this)"> MTN MoMo</button>
+          <button type="button" class="pay-method-btn" data-method="airtel" onclick="setPaymentMethod('airtel',this)">🔴 Airtel Money</button>
+        </div>
+        <div id="payment-instructions"></div>
+      </div>
+      <div class="modal-actions" style="margin-top:20px">
+        <button class="btn-add-cart" onclick="checkout()">Checkout →</button>
+        <button class="btn-close-modal" onclick="closeCartModal()">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER RECEIPT MODAL -->
+     <div class="modal-overlay" id="receipt-modal">
+  <div class="modal">
+    <div class="modal-body">
+      <button class="btn-close-modal" style="flex:1" onclick="closeReceiptModal()">X</button>
+      <div class="modal-title" style="margin-bottom:6px">🧾 Order Confirmed</div>
+      <div style="color:var(--muted);font-size:13px;margin-bottom:20px" id="receipt-order-id"></div>
+      <div id="receipt-details"></div>
+      <div class="modal-actions" style="margin-top:20px">
+        <button class="btn-whatsapp" id="receipt-whatsapp-btn" style="flex:1;display:none" onclick="shareOrderViaWhatsApp()">💬 Confirm on WhatsApp</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT MODAL (Firebase-backed) -->
+<div class="modal-overlay chat-modal" id="chat-modal">
+  <div class="modal">
+    <div class="modal-body" id="chat-modal-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" style="background: var(--success);">✓ <span id="toast-msg">Welcome to NEXUS! 🎉</span></div>
+
+<!-- GOOGLE AUTH OVERLAY -->
+<div id="google-auth-overlay" class="">
+  <svg width="48" height="48" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"></path><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"></path><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"></path><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"></path></svg>
+  <div class="google-spinner"></div>
+  <div class="google-auth-text">Signing in with Google…</div>
+  <div class="google-auth-sub">Authenticating your account securely</div>
+</div>
+
+<!-- ADMIN PASSWORD GATE -->
+<div id="admin-gate-overlay">
+  <div class="admin-gate-box">
+    <div class="admin-gate-icon">🔒</div>
+    <div class="admin-gate-title">Admin Access</div>
+    <div class="admin-gate-sub">Enter the admin password to manage products.</div>
+    <div class="input-group" style="margin-bottom:0">
+      <label>Password</label>
+      <input type="password" id="admin-gate-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')submitAdminGate()">
+    </div>
+    <div class="admin-gate-error" id="admin-gate-error"></div>
+    <button class="btn-gate-submit" onclick="submitAdminGate()">Unlock Admin Panel</button>
+    <button class="btn-gate-cancel" onclick="closeAdminGate()">Cancel</button>
+  </div>
+</div>
+
+<script>
+const EMOJIS = {phones:'📱',laptops:'💻',tvs:'📺',accessories:'🎧'};
+
+// ---- CURRENCY: show RWF alongside USD ----
+// Approximate exchange rate — update this number whenever the real rate changes.
+const USD_TO_RWF = 1300;
+function formatRWF(usd){
+  return Math.round(usd*USD_TO_RWF).toLocaleString();
+}
+
+// ---- ORDER STATUS TRACKING ----
+const ORDER_STATUSES = ['Pending','Awaiting Payment','Confirmed','Shipped','Delivered','Cancelled'];
+const STATUS_COLORS = {Pending:'#5a7a8a','Awaiting Payment':'#ffb020',Confirmed:'#00d4ff',Shipped:'#a855f7',Delivered:'#00e5a0',Cancelled:'#ff6b35'};
+const PAYMENT_LABELS = {cod:'💵 Cash / Pickup',momo:'📱 MTN MoMo',airtel:'🔴 Airtel Money'};
+
+// ---- PHONE VALIDATION (Rwandan numbers) ----
+function isValidRwandaPhone(phone){
+  const cleaned = phone.replace(/[\s-]/g,'');
+  return /^(\+?250|0)?7[0-9]{8}$/.test(cleaned);
+}
+
+// ---- XSS PROTECTION ----
+// Escapes HTML special characters so user-entered text (product name, brand,
+// badge, spec keys/values) can never be interpreted as HTML/JS when inserted
+// via innerHTML. Always wrap user-supplied text with this before rendering.
+function escapeHtml(str){
+  if(str===null||str===undefined) return '';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+// ---- WHATSAPP HELPERS (click-to-chat — no API key needed, works today) ----
+// Normalizes a Rwandan-style phone number (0788..., 788..., +250788..., 250788...)
+// into the digits-only international format wa.me requires.
+function toWhatsAppNumber(phone){
+  let cleaned = String(phone||'').replace(/[^\d]/g,'');
+  if(cleaned.startsWith('250')) return cleaned;
+  if(cleaned.startsWith('0')) return '250'+cleaned.slice(1);
+  if(cleaned.startsWith('7')) return '250'+cleaned;
+  return cleaned;
+}
+function whatsappLink(phone, message){
+  return `https://wa.me/${toWhatsAppNumber(phone)}?text=${encodeURIComponent(message)}`;
+}
+
+// ---- ADMIN PASSWORD GATE ----
+// NOTE: this is a client-side-only gate (no server/backend), so even with a hashed
+// password it is a DETERRENT, not real security — a determined person could still
+// try common passwords against this hash. Do not store real secrets or sensitive
+// customer data behind this alone; pair it with a real backend if that's ever needed.
+const ADMIN_PASSWORD_HASH = "ff0a5f39b703f6d02441f3b42aa02af28bc400cd8193ffd8fb1f4c4d245444c5"; // sha256("nexus2026") — to change the password, compute sha256 of your new password and paste the hex here
+async function sha256Hex(str){
+  const data = new TextEncoder().encode(str);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+let adminUnlocked = false;
+let adminAttempts = parseInt(localStorage.getItem('nexus_admin_attempts')||'0',10);
+const ADMIN_MAX_ATTEMPTS = 5;
+const ADMIN_LOCKOUT_SECONDS = 30;
+let adminLockoutTimer = null;
+
+let products = [
+  {id:1,name:'iPhone 15 Pro Max',brand:'Apple',category:'phones',image:'',emoji:'📱',price:1199,stock:8,badge:'New',specs:{'Display':'6.7" Super Retina XDR','Chip':'A17 Pro','Camera':'48MP Triple','Storage':'256GB–1TB','Battery':'4422 mAh'}},
+  {id:2,name:'Samsung Galaxy S24 Ultra',brand:'Samsung',category:'phones',image:'',emoji:'📱',price:1299,stock:5,badge:'Hot',specs:{'Display':'6.8" Dynamic AMOLED','Chip':'Snapdragon 8 Gen 3','Camera':'200MP Quad','S Pen':'Built-in','Storage':'256GB–1TB'}},
+  {id:3,name:'MacBook Pro 16"',brand:'Apple',category:'laptops',image:'',emoji:'💻',price:2499,stock:4,badge:'Top Pick',specs:{'Chip':'Apple M3 Max','RAM':'36GB','Storage':'512GB SSD','Display':'16.2" Liquid Retina XDR','Battery':'22 hrs'}},
+  {id:4,name:'Dell XPS 15',brand:'Dell',category:'laptops',image:'',emoji:'💻',price:1799,stock:6,badge:null,specs:{'CPU':'Intel Core i9','RAM':'32GB DDR5','Storage':'1TB NVMe','Display':'15.6" OLED Touch','GPU':'RTX 4060'}},
+  {id:5,name:'LG OLED evo C3 65"',brand:'LG',category:'tvs',image:'',emoji:'📺',price:1799,stock:3,badge:'OLED',specs:{'Resolution':'4K UHD','Panel':'OLED evo','Size':'65 inches','HDR':'Dolby Vision IQ','Processor':'α9 AI Gen6'}},
+  {id:6,name:'Sony WH-1000XM5',brand:'Sony',category:'accessories',image:'',emoji:'🎧',price:379,stock:15,badge:'Best ANC',specs:{'ANC':'Industry-leading','Battery':'30 hrs','Connectivity':'Bluetooth 5.2','Codec':'LDAC Hi-Res','Weight':'250g'}},
+];
+let nextId=7, cart=[], currentUser=null, currentFilter='all', editId=null, imgSrc='upload';
+let orders=[], nextOrderId=1;
+let notifications=[], nextNotifId=1;
+let storeSettings={whatsappNumber:'',momoCode:'',momoName:'',airtelNumber:''};
+let selectedPaymentMethod='cod';
+let deferredInstallPrompt=null;
+
+// ---- LOCAL STORAGE PERSISTENCE ----
+function saveData(){
+  try{
+    localStorage.setItem('nexus_products', JSON.stringify(products));
+    localStorage.setItem('nexus_cart', JSON.stringify(cart));
+    localStorage.setItem('nexus_nextId', String(nextId));
+    localStorage.setItem('nexus_orders', JSON.stringify(orders));
+    localStorage.setItem('nexus_nextOrderId', String(nextOrderId));
+    localStorage.setItem('nexus_notifications', JSON.stringify(notifications));
+    localStorage.setItem('nexus_nextNotifId', String(nextNotifId));
+    localStorage.setItem('nexus_settings', JSON.stringify(storeSettings));
+  }catch(e){
+    console.error('Could not save to localStorage', e);
+    showToast('Storage full — try using image URLs instead of uploads', '#ff6b35');
+  }
+}
+function loadData(){
+  try{
+    const savedProducts = localStorage.getItem('nexus_products');
+    const savedCart = localStorage.getItem('nexus_cart');
+    const savedNextId = localStorage.getItem('nexus_nextId');
+    const savedOrders = localStorage.getItem('nexus_orders');
+    const savedNextOrderId = localStorage.getItem('nexus_nextOrderId');
+    const savedNotifs = localStorage.getItem('nexus_notifications');
+    const savedNextNotifId = localStorage.getItem('nexus_nextNotifId');
+    const savedSettings = localStorage.getItem('nexus_settings');
+    if(savedProducts) products = JSON.parse(savedProducts);
+    if(savedCart) cart = JSON.parse(savedCart);
+    if(savedNextId) nextId = parseInt(savedNextId, 10);
+    if(savedOrders) orders = JSON.parse(savedOrders);
+    if(savedNextOrderId) nextOrderId = parseInt(savedNextOrderId, 10);
+    if(savedNotifs) notifications = JSON.parse(savedNotifs);
+    if(savedNextNotifId) nextNotifId = parseInt(savedNextNotifId, 10);
+    if(savedSettings) storeSettings = Object.assign({whatsappNumber:'',momoCode:'',momoName:'',airtelNumber:''}, JSON.parse(savedSettings));
+  }catch(e){
+    console.error('Could not load from localStorage', e);
+  }
+}
+
+function logout(){ currentUser=null; showToast('Logged out'); }
+
+// ---- BACKUP / RESTORE (since data only lives in this browser's localStorage) ----
+function exportData(){
+  const backup = {
+    exportedAt: new Date().toISOString(),
+    products, orders, notifications, nextId, nextOrderId, nextNotifId, storeSettings
+  };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `nexus-backup-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Backup downloaded ✅');
+}
+function importData(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const data = JSON.parse(e.target.result);
+      if(!confirm('This will replace all current products, orders, and notifications with the content of this backup file. Continue?')){
+        input.value='';
+        return;
+      }
+      if(Array.isArray(data.products)) products = data.products;
+      if(Array.isArray(data.orders)) orders = data.orders;
+      if(Array.isArray(data.notifications)) notifications = data.notifications;
+      if(typeof data.nextId === 'number') nextId = data.nextId;
+      if(typeof data.nextOrderId === 'number') nextOrderId = data.nextOrderId;
+      if(typeof data.nextNotifId === 'number') nextNotifId = data.nextNotifId;
+      if(data.storeSettings && typeof data.storeSettings === 'object') storeSettings = Object.assign({whatsappNumber:'',momoCode:'',momoName:'',airtelNumber:''}, data.storeSettings);
+      saveData();
+      renderAdminList();
+      renderOrders();
+      renderDashboard();
+      updateNotifBadge();
+      renderNotifMenu();
+      loadSettingsForm();
+      updateWhatsAppFloatVisibility();
+      showToast('Backup restored ✅');
+    }catch(err){
+      console.error('Invalid backup file', err);
+      showToast('Invalid backup file — could not restore','#ff6b35');
+    }
+    input.value='';
+  };
+  reader.readAsText(file);
+}
+
+// ---- NOTIFICATIONS: fires when a customer places an order ----
+function addOrderNotification(order){
+  const itemsSummary = order.items.map(i=>`${i.name} ×${i.qty}`).join(', ');
+  const message = `${order.customerName} (${order.customerPhone}) yahisemo: ${itemsSummary} — $${order.total.toLocaleString()}`;
+  notifications.unshift({id:nextNotifId++, message, date:order.date, read:false});
+  saveData();
+  updateNotifBadge();
+  renderNotifMenu();
+  sendDesktopNotification('🛒 New order on NEXUS', message);
+}
+function updateNotifBadge(){
+  const badge=document.getElementById('notif-badge');
+  if(!badge) return;
+  const unread=notifications.filter(n=>!n.read).length;
+  if(unread>0){badge.textContent=unread>9?'9+':unread;badge.style.display='flex';}
+  else{badge.style.display='none';}
+}
+function renderNotifMenu(){
+  const list=document.getElementById('notif-list');
+  if(!list) return;
+  if(!notifications.length){
+    list.innerHTML='<div style="padding:20px 12px;color:var(--muted);font-size:12px;text-align:center;">No notifications yet</div>';
+    return;
+  }
+  list.innerHTML=notifications.slice(0,20).map(n=>`
+    <div style="padding:10px 12px;border-radius:8px;${n.read?'':'background:rgba(0,212,255,0.06);'}font-size:12px;line-height:1.5;margin-bottom:2px;">
+      <div style="color:var(--text)">${escapeHtml(n.message)}</div>
+      <div style="color:var(--muted);font-size:11px;margin-top:3px;">${new Date(n.date).toLocaleString()}</div>
+    </div>
+  `).join('');
+}
+function toggleNotifMenu(event){
+  event.stopPropagation();
+  document.getElementById('notif-menu').classList.toggle('open');
+  document.getElementById('lang-menu').classList.remove('open');
+  renderNotifMenu();
+  notifications.forEach(n=>n.read=true);
+  saveData();
+  updateNotifBadge();
+}
+function requestDesktopNotifPermission(event){
+  if(event) event.stopPropagation();
+  if(!('Notification' in window)){showToast('Desktop notifications are not supported in this browser','#ff6b35');return;}
+  Notification.requestPermission().then(perm=>{
+    if(perm==='granted') showToast('Desktop alerts enabled 🔔');
+    else showToast('Desktop alerts were not enabled','#ff6b35');
+  });
+}
+function sendDesktopNotification(title,body){
+  if(!('Notification' in window)) return;
+  if(Notification.permission==='granted'){
+    try{ new Notification(title,{body}); }catch(e){ console.error(e); }
+  }
+}
+// Live-update the bell across other tabs of the SAME browser when a new order/notification is saved.
+// NOTE: this only works within one browser on one device — it cannot notify a different
+// device/browser in real time without a real backend/server.
+window.addEventListener('storage', e=>{
+  if(e.key==='nexus_notifications' || e.key==='nexus_orders'){
+    loadData();
+    updateNotifBadge();
+    renderNotifMenu();
+    if(document.getElementById('admin-page').classList.contains('active')){ renderOrders(); renderDashboard(); }
+  }
+});
+
+// ---- ADMIN GATE LOGIC ----
+function openAdmin(){
+  if(adminUnlocked){
+    enterAdminPanel();
+    return;
+  }
+  document.getElementById('admin-gate-pw').value = '';
+  document.getElementById('admin-gate-error').textContent = '';
+  document.getElementById('admin-gate-overlay').classList.add('show');
+  setTimeout(()=>document.getElementById('admin-gate-pw').focus(), 50);
+}
+function closeAdminGate(){
+  document.getElementById('admin-gate-overlay').classList.remove('show');
+}
+async function submitAdminGate(){
+  if(adminLockoutTimer){return;}
+  const entered = document.getElementById('admin-gate-pw').value;
+  const enteredHash = await sha256Hex(entered);
+  if(enteredHash === ADMIN_PASSWORD_HASH){
+    adminUnlocked = true;
+    adminAttempts = 0;
+    localStorage.removeItem('nexus_admin_attempts');
+    localStorage.removeItem('nexus_admin_lockout_until');
+    closeAdminGate();
+    enterAdminPanel();
+  } else {
+    adminAttempts++;
+    localStorage.setItem('nexus_admin_attempts', String(adminAttempts));
+    if(adminAttempts >= ADMIN_MAX_ATTEMPTS){
+      const lockoutUntil = Date.now() + ADMIN_LOCKOUT_SECONDS*1000;
+      localStorage.setItem('nexus_admin_lockout_until', String(lockoutUntil));
+      startAdminLockout(ADMIN_LOCKOUT_SECONDS);
+    } else {
+      const left = ADMIN_MAX_ATTEMPTS - adminAttempts;
+      document.getElementById('admin-gate-error').textContent = `Incorrect password. ${left} attempt${left!==1?'s':''} left.`;
+    }
+    document.getElementById('admin-gate-pw').value = '';
+    document.getElementById('admin-gate-pw').focus();
+  }
+}
+function startAdminLockout(seconds){
+  let secondsLeft = seconds||ADMIN_LOCKOUT_SECONDS;
+  const pwInput = document.getElementById('admin-gate-pw');
+  const submitBtn = document.querySelector('.btn-gate-submit');
+  pwInput.disabled = true;
+  submitBtn.disabled = true;
+  submitBtn.style.opacity = '0.5';
+  submitBtn.style.cursor = 'not-allowed';
+  const updateMsg = ()=>{
+    document.getElementById('admin-gate-error').textContent = `Too many attempts. Try again in ${secondsLeft}s.`;
+  };
+  updateMsg();
+  adminLockoutTimer = setInterval(()=>{
+    secondsLeft--;
+    if(secondsLeft<=0){
+      clearInterval(adminLockoutTimer);
+      adminLockoutTimer = null;
+      adminAttempts = 0;
+      localStorage.removeItem('nexus_admin_attempts');
+      localStorage.removeItem('nexus_admin_lockout_until');
+      pwInput.disabled = false;
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '';
+      submitBtn.style.cursor = '';
+      document.getElementById('admin-gate-error').textContent = '';
+      pwInput.focus();
+    } else {
+      updateMsg();
+    }
+  }, 1000);
+}
+// Resume an in-progress lockout if the page was refreshed while locked out.
+function resumeAdminLockoutIfActive(){
+  const lockoutUntil = parseInt(localStorage.getItem('nexus_admin_lockout_until')||'0',10);
+  if(lockoutUntil && lockoutUntil > Date.now()){
+    document.getElementById('admin-gate-overlay').classList.add('show');
+    startAdminLockout(Math.ceil((lockoutUntil - Date.now())/1000));
+  } else if(lockoutUntil){
+    localStorage.removeItem('nexus_admin_attempts');
+    localStorage.removeItem('nexus_admin_lockout_until');
+    adminAttempts = 0;
+  }
+}
+// ---- STORE SETTINGS (WhatsApp number + Mobile Money details) ----
+function loadSettingsForm(){
+  const w=document.getElementById('s-whatsapp'); if(!w) return; // settings card not in DOM yet
+  document.getElementById('s-whatsapp').value=storeSettings.whatsappNumber||'';
+  document.getElementById('s-momocode').value=storeSettings.momoCode||'';
+  document.getElementById('s-momoname').value=storeSettings.momoName||'';
+  document.getElementById('s-airtel').value=storeSettings.airtelNumber||'';
+}
+function saveStoreSettings(){
+  storeSettings={
+    whatsappNumber:document.getElementById('s-whatsapp').value.trim(),
+    momoCode:document.getElementById('s-momocode').value.trim(),
+    momoName:document.getElementById('s-momoname').value.trim(),
+    airtelNumber:document.getElementById('s-airtel').value.trim()
+  };
+  saveData();
+  updateWhatsAppFloatVisibility();
+  showToast('Store settings saved ✅');
+}
+function updateWhatsAppFloatVisibility(){
+  const btn=document.getElementById('whatsapp-float');
+  if(!btn) return;
+  btn.style.display=storeSettings.whatsappNumber?'flex':'none';
+}
+function openStoreWhatsApp(){
+  if(!storeSettings.whatsappNumber){showToast('Store WhatsApp number is not set up yet','#ff6b35');return;}
+  window.open(whatsappLink(storeSettings.whatsappNumber,'Muraho NEXUS! Mfite ikibazo ku bicuruzwa byanyu 👋'),'_blank');
+}
+
+// ---- PAYMENT METHOD UI (checkout) ----
+function resetPaymentMethodUI(){
+  selectedPaymentMethod='cod';
+  document.querySelectorAll('.pay-method-btn').forEach(b=>b.classList.toggle('active',b.dataset.method==='cod'));
+  const box=document.getElementById('payment-instructions');
+  if(box) box.innerHTML='';
+}
+function setPaymentMethod(method,btn){
+  selectedPaymentMethod=method;
+  document.querySelectorAll('.pay-method-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const box=document.getElementById('payment-instructions');
+  if(method==='cod'){ box.innerHTML=''; return; }
+  const isMomo=method==='momo';
+  const code=isMomo?storeSettings.momoCode:storeSettings.airtelNumber;
+  const label=isMomo?'MTN MoMo':'Airtel Money';
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  if(code){
+    const ussd=isMomo?`*182*8*1*${escapeHtml(code)}#`:`*500*1*${escapeHtml(code)}#`;
+    box.innerHTML=`
+      <div class="pay-instructions-box">
+        💡 Ohereza <b>$${total.toLocaleString()}</b> (≈ ${formatRWF(total)} RWF) kuri ${label}: <b>${escapeHtml(code)}</b>${isMomo&&storeSettings.momoName?` (${escapeHtml(storeSettings.momoName)})`:''}<br>
+        Koresha USSD: <b>${ussd}</b> cyangwa uhindure uko ukunda kwishyura kuri ${label}.
+      </div>
+      <div class="input-group" style="margin-top:10px;margin-bottom:0"><label>${label} Transaction Reference (optional)</label><input type="text" id="co-paymentref" placeholder="e.g. from your confirmation SMS"></div>
+      <div class="pay-status-note">Nyuma yo gutanga order, Admin azareba MoMo/Airtel SMS ye akemeza order yanyu ako kanya bishoboka.</div>
+    `;
+  } else {
+    box.innerHTML=`<div class="pay-instructions-box">The store hasn't added their ${label} number yet. Choose Cash on Delivery, or message us on WhatsApp to arrange payment.</div>`;
+  }
+}
+
+// ---- PWA: INSTALL PROMPT ----
+function triggerPWAInstall(){
+  document.getElementById('pwa-install-banner').classList.remove('show');
+  if(!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(choice=>{
+    deferredInstallPrompt=null;
+    if(choice.outcome==='accepted') showToast('NEXUS installed 🎉');
+  });
+}
+function dismissInstallBanner(){
+  document.getElementById('pwa-install-banner').classList.remove('show');
+  localStorage.setItem('nexus_install_dismissed','1');
+}
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  if(localStorage.getItem('nexus_install_dismissed')!=='1'){
+    document.getElementById('pwa-install-banner').classList.add('show');
+  }
+});
+window.addEventListener('appinstalled',()=>{
+  document.getElementById('pwa-install-banner').classList.remove('show');
+  showToast('NEXUS installed as an app 🎉');
+});
+// Registers sw.js so the app shell can load offline and the browser considers it installable.
+// NOTE: this service worker does NOT include real Web Push handling — sending a push to the
+// Admin's phone from a customer's order (placed on a different device) requires a backend
+// server to relay that event through a push service using VAPID keys. See sw.js for details.
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js').catch(err=>console.error('SW registration failed (this is expected if sw.js is not hosted alongside this file yet)',err));
+  });
+}
+
+function renderDashboard(){
+  const el=document.getElementById('dashboard-cards');
+  if(!el) return;
+  const totalRevenue=orders.reduce((s,o)=>s+o.total,0);
+  const totalOrders=orders.length;
+  const dayAgo=Date.now()-24*60*60*1000;
+  const recentOrders=orders.filter(o=>new Date(o.date).getTime()>=dayAgo).length;
+
+  const qtyByProduct={};
+  orders.forEach(o=>o.items.forEach(i=>{qtyByProduct[i.name]=(qtyByProduct[i.name]||0)+i.qty;}));
+  let topProduct='—', topQty=0;
+  Object.entries(qtyByProduct).forEach(([name,qty])=>{if(qty>topQty){topProduct=name;topQty=qty;}});
+
+  const cards=[
+    {label:'Total Revenue',value:`$${totalRevenue.toLocaleString()}`,sub:`≈ ${formatRWF(totalRevenue)} RWF`,color:'var(--success)'},
+    {label:'Total Orders',value:totalOrders,sub:`${recentOrders} in last 24h`,color:'var(--accent)'},
+    {label:'Top Product',value:topProduct,sub:topQty?`${topQty} sold`:'No sales yet',color:'var(--admin)'},
+    {label:'Orders Last 24h',value:recentOrders,sub:'New activity',color:'var(--accent2)'}
+  ];
+  el.innerHTML=cards.map(c=>`
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px 20px;">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">${c.label}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:${c.color};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(String(c.value))}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;">${escapeHtml(c.sub)}</div>
+    </div>
+  `).join('');
+}
+function enterAdminPanel(){
+  document.getElementById('store-page').classList.remove('active');
+  document.getElementById('admin-page').classList.add('active');
+  renderAdminList();
+  renderOrders();
+  renderDashboard();
+  loadSettingsForm();
+}
+function closeAdmin(){
+  document.getElementById('admin-page').classList.remove('active');
+  document.getElementById('store-page').classList.add('active');
+  renderProducts(currentFilter==='all'?products:products.filter(p=>p.category===currentFilter));
+}
+
+function setImgSrc(src,btn){
+  imgSrc=src;
+  document.querySelectorAll('.img-src-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('upload-section').style.display=src==='upload'?'block':'none';
+  document.getElementById('url-section').style.display=src==='url'?'block':'none';
+}
+function handleFile(input){
+  const file=input.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{setPreview(e.target.result);};
+  reader.readAsDataURL(file);
+}
+function previewFromUrl(url){
+  if(!url){clearPreview();return;}
+  setPreview(url);
+}
+function setPreview(src){
+  document.getElementById('form-img').value=src;
+  document.getElementById('img-preview').innerHTML=`<img src="${src}" onerror="this.style.display='none';document.getElementById('img-preview').innerHTML='<div class=\\'preview-icon\\'>❌</div><div class=\\'preview-placeholder\\'>Cannot load image — check the URL</div>'">`;
+}
+function clearPreview(){
+  document.getElementById('form-img').value='';
+  document.getElementById('img-preview').innerHTML='<div class="preview-icon">🖼️</div><div class="preview-placeholder">Image preview appears here</div>';
+}
+function clearFieldErrors(){
+  ['f-name','f-brand','f-price','f-stock'].forEach(id=>document.getElementById(id).classList.remove('field-error'));
+}
+function saveProduct(){
+  const name=document.getElementById('f-name').value.trim();
+  const brand=document.getElementById('f-brand').value.trim();
+  const cat=document.getElementById('f-cat').value;
+  const priceRaw=document.getElementById('f-price').value;
+  const price=parseFloat(priceRaw);
+  const stockRaw=document.getElementById('f-stock').value;
+  const stock=parseInt(stockRaw,10);
+  const badge=document.getElementById('f-badge').value.trim()||null;
+  const image=document.getElementById('form-img').value.trim();
+
+  clearFieldErrors();
+  let hasError=false;
+  if(!name){document.getElementById('f-name').classList.add('field-error');hasError=true;}
+  if(!brand){document.getElementById('f-brand').classList.add('field-error');hasError=true;}
+  if(!priceRaw||isNaN(price)||price<=0){document.getElementById('f-price').classList.add('field-error');hasError=true;}
+  if(!stockRaw||isNaN(stock)||stock<0){document.getElementById('f-stock').classList.add('field-error');hasError=true;}
+  if(hasError){showToast('Please fix the highlighted fields','#ff6b35');return;}
+
+  const specs={};
+  for(let i=1;i<=5;i++){
+    const k=document.getElementById(`k${i}`).value.trim(), v=document.getElementById(`v${i}`).value.trim();
+    if(k&&v) specs[k]=v;
+  }
+  if(editId!==null){
+    const idx=products.findIndex(p=>p.id===editId);
+    if(idx>-1) products[idx]={...products[idx],name,brand,category:cat,price,stock,badge,image,emoji:EMOJIS[cat]||'📦',specs};
+    showToast(`"${name}" updated ✅`);
+    cancelEdit();
+  } else {
+    products.push({id:nextId++,name,brand,category:cat,price,stock,badge,image,emoji:EMOJIS[cat]||'📦',specs});
+    showToast(`"${name}" added to store 🎉`);
+    clearForm();
+  }
+  saveData();
+  renderAdminList();
+}
+
+function editProduct(id){
+  const p=products.find(x=>x.id===id); if(!p) return;
+  editId=id;
+  document.getElementById('form-title').innerHTML='✏️ <span>Editing Product</span>';
+  document.getElementById('f-name').value=p.name;
+  document.getElementById('f-brand').value=p.brand;
+  document.getElementById('f-cat').value=p.category;
+  document.getElementById('f-price').value=p.price;
+  document.getElementById('f-stock').value=(p.stock!==undefined&&p.stock!==null)?p.stock:0;
+  document.getElementById('f-badge').value=p.badge||'';
+  document.getElementById('form-img').value=p.image||'';
+  if(p.image) setPreview(p.image); else clearPreview();
+  const keys=Object.keys(p.specs);
+  for(let i=0;i<5;i++){
+    document.getElementById(`k${i+1}`).value=keys[i]||'';
+    document.getElementById(`v${i+1}`).value=keys[i]?p.specs[keys[i]]:'';
+  }
+  document.getElementById('btn-save').textContent='💾 Update Product';
+  document.getElementById('btn-cancel').style.display='block';
+  document.querySelector('.admin-form-card').scrollIntoView({behavior:'smooth'});
+}
+
+function deleteProduct(id){
+  const p=products.find(x=>x.id===id); if(!p) return;
+  if(!confirm(`Delete "${p.name}"? This cannot be undone.`)) return;
+  products=products.filter(x=>x.id!==id);
+  cart=cart.filter(x=>x.id!==id);
+  updateCartCount();
+  if(editId===id) cancelEdit();
+  saveData();
+  renderAdminList();
+  showToast(`"${p.name}" deleted`,'#ff6b35');
+}
+
+function cancelEdit(){
+  editId=null;
+  document.getElementById('form-title').innerHTML='➕ <span>Add New Product</span>';
+  document.getElementById('btn-save').textContent='💾 Save Product';
+  document.getElementById('btn-cancel').style.display='none';
+  clearForm();
+}
+
+function clearForm(){
+  ['f-name','f-brand','f-price','f-stock','f-badge','form-img'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('f-cat').value='phones';
+  document.getElementById('url-input').value='';
+  document.getElementById('file-input').value='';
+  for(let i=1;i<=5;i++){document.getElementById(`k${i}`).value='';document.getElementById(`v${i}`).value='';}
+  clearPreview();
+  clearFieldErrors();
+}
+['f-name','f-brand','f-price','f-stock'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',function(){this.classList.remove('field-error');});
+});
+
+function renderAdminList(){
+  const list=document.getElementById('admin-list');
+  document.getElementById('admin-count').textContent=`${products.length} product${products.length!==1?'s':''}`;
+  if(!products.length){
+    list.innerHTML='<div class="empty-state"><div class="ei">📦</div><p>No products yet. Add your first product using the form on the left.</p></div>';
+    return;
+  }
+  list.innerHTML=products.map(p=>{
+    const stock=(p.stock!==undefined&&p.stock!==null)?p.stock:0;
+    const stockColor=stock<=0?'var(--accent2)':(stock<=3?'#ffb020':'var(--success)');
+    return `
+    <div class="admin-row">
+      <div class="admin-thumb">
+        ${p.image?`<img src="${escapeHtml(p.image)}" onerror="this.style.display='none';this.parentNode.innerHTML='${p.emoji}'">`:`${p.emoji}`}
+      </div>
+      <div class="row-info">
+        <div class="row-name">${escapeHtml(p.name)}</div>
+        <div class="row-meta">${escapeHtml(p.brand)} · ${escapeHtml(p.category)}</div>
+        <div class="row-meta" style="color:${stockColor};font-weight:600;">${stock<=0?'Out of stock':`${stock} in stock`}</div>
+      </div>
+      <div class="row-price">$${p.price.toLocaleString()}</div>
+      <div class="row-btns">
+        <button class="btn-edit" onclick="editProduct(${p.id})">✏️ Edit</button>
+        <button class="btn-del" onclick="deleteProduct(${p.id})">🗑️</button>
+      </div>
+    </div>
+  `;}).join('');
+}
+
+function renderOrders(){
+  const list=document.getElementById('orders-list');
+  // NOTE: the search box and status filter above were previously wired to call this function
+  // but it never actually read their values — fixed here since filtering matters a lot more
+  // now that "Awaiting Payment" orders need to be found quickly for manual MoMo/Airtel verification.
+  const searchEl=document.getElementById('admin-order-search');
+  const statusEl=document.getElementById('admin-order-status-filter');
+  const q=(searchEl?searchEl.value:'').toLowerCase().trim();
+  const statusFilter=statusEl?statusEl.value:'all';
+  let filtered=orders;
+  if(statusFilter!=='all') filtered=filtered.filter(o=>(o.status||'Pending')===statusFilter);
+  if(q) filtered=filtered.filter(o=>o.customerName.toLowerCase().includes(q)||o.customerPhone.toLowerCase().includes(q));
+
+  document.getElementById('orders-count').textContent=`${filtered.length} order${filtered.length!==1?'s':''}`;
+  if(!filtered.length){
+    list.innerHTML=`<div class="empty-state"><div class="ei">🧾</div><p>${orders.length?'No orders match your search.':'No orders yet. Orders will appear here once a customer checks out.'}</p></div>`;
+    return;
+  }
+  const sorted=[...filtered].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  list.innerHTML=sorted.map(o=>{
+    const status=o.status||'Pending';
+    const color=STATUS_COLORS[status]||'#5a7a8a';
+    const payMethod=o.paymentMethod||'cod';
+    const payLabel=PAYMENT_LABELS[payMethod]||PAYMENT_LABELS.cod;
+    const payRef=o.paymentRef?` · Ref: ${escapeHtml(o.paymentRef)}`:'';
+    return `
+    <div class="admin-row" style="align-items:flex-start">
+      <div class="admin-thumb">🧾</div>
+      <div class="row-info">
+        <div class="row-name">${escapeHtml(o.customerName)} · ${escapeHtml(o.customerPhone)}</div>
+        <div class="row-meta">${o.items.map(i=>`${escapeHtml(i.name)} ×${i.qty}`).join(', ')}</div>
+        ${o.address?`<div class="row-meta">📍 ${escapeHtml(o.address)}</div>`:''}
+        <div class="row-meta">${payLabel}${payRef}</div>
+        <div class="row-meta">${new Date(o.date).toLocaleString()}</div>
+        <select onchange="updateOrderStatus(${o.id},this.value)" style="margin-top:6px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:4px 8px;color:${color};font-size:11px;font-weight:600;">
+          ${ORDER_STATUSES.map(s=>`<option value="${s}" ${s===status?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+      <div style="text-align:right">
+        <div class="row-price">$${o.total.toLocaleString()}</div>
+        <div style="font-size:10px;color:var(--muted);margin-bottom:8px;">≈ ${formatRWF(o.total)} RWF</div>
+        <button class="row-whatsapp-btn" onclick="sendOrderWhatsApp(${o.id})">💬 WhatsApp</button>
+      </div>
+    </div>
+  `;}).join('');
+}
+function sendOrderWhatsApp(orderId){
+  const o=orders.find(x=>x.id===orderId); if(!o) return;
+  const itemsList=o.items.map(i=>`- ${i.name} x${i.qty}`).join('\n');
+  const msg=`Muraho ${o.customerName}! 👋\n\nOrder yanyu #${o.id} kuri NEXUS yakiriwe.\n\n${itemsList}\n\nTotal: $${o.total.toLocaleString()} (≈ ${formatRWF(o.total)} RWF)\nStatus: ${o.status||'Pending'}\n\nMurakoze gucuruza kuri NEXUS! 🙏`;
+  window.open(whatsappLink(o.customerPhone,msg),'_blank');
+}
+function updateOrderStatus(orderId, newStatus){
+  const order=orders.find(o=>o.id===orderId);
+  if(!order) return;
+  order.status=newStatus;
+  saveData();
+  renderOrders();
+  renderDashboard();
+  showToast(`Order #${orderId} marked as ${newStatus}`);
+}
+
+function renderProducts(list){
+  const grid=document.getElementById('products-grid');
+  document.getElementById('product-count').textContent=`${list.length} product${list.length!==1?'s':''}`;
+  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted)">No products found 🔍</div>';return;}
+  grid.innerHTML=list.map((p,i)=>{
+    const stock=(p.stock!==undefined&&p.stock!==null)?p.stock:0;
+    const outOfStock=stock<=0;
+    const lowStock=!outOfStock&&stock<=3;
+    return `
+    <div class="product-card" style="animation-delay:${i*0.04}s${outOfStock?';opacity:0.55':''}" onclick="openProduct(${p.id})">
+      <div class="product-image">
+        ${outOfStock?`<div class="product-badge" style="background:var(--muted)">Out of Stock</div>`:(p.badge?`<div class="product-badge">${escapeHtml(p.badge)}</div>`:'')}
+        ${p.image?`<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:``}
+        <span class="emoji-fallback" style="${p.image?'display:none':'display:flex'}">${p.emoji}</span>
+      </div>
+      <div class="product-info">
+        <div class="product-brand">${escapeHtml(p.brand)}</div>
+        <div class="product-name">${escapeHtml(p.name)}</div>
+        <div class="product-specs-preview">${Object.entries(p.specs).slice(0,2).map(([k,v])=>`${escapeHtml(k)}: ${escapeHtml(v)}`).join(' · ')}</div>
+        <div style="font-size:11px;font-weight:600;margin-bottom:10px;color:${outOfStock?'var(--accent2)':(lowStock?'var(--accent2)':'var(--success)')}">
+          ${outOfStock?'✕ Out of stock':(lowStock?`⚠ Only ${stock} left`:`✓ ${stock} in stock`)}
+        </div>
+        <div class="product-footer">
+          <div>
+            <div class="product-price">$${p.price.toLocaleString()}<span> USD</span></div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px;">≈ ${formatRWF(p.price)} RWF</div>
+          </div>
+          <button class="add-btn" style="${outOfStock?'opacity:0.4;cursor:not-allowed':''}" onclick="event.stopPropagation();addToCart(${p.id})" ${outOfStock?'disabled':''}>+</button>
+        </div>
+      </div>
+    </div>
+  `;}).join('');
+}
+
+function filterCat(cat,btn){
+  currentFilter=cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(cat==='all'?products:products.filter(p=>p.category===cat));
+}
+function searchProducts(q){
+  const ql=q.toLowerCase();
+  const base=currentFilter==='all'?products:products.filter(p=>p.category===currentFilter);
+  renderProducts(ql?base.filter(p=>p.name.toLowerCase().includes(ql)||p.brand.toLowerCase().includes(ql)):base);
+}
+
+function openProduct(id){
+  const p=products.find(x=>x.id===id); if(!p) return;
+  const stock=(p.stock!==undefined&&p.stock!==null)?p.stock:0;
+  const outOfStock=stock<=0;
+  const lowStock=!outOfStock&&stock<=3;
+  const mi=document.getElementById('modal-img');
+  mi.innerHTML=p.image?`<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" onerror="this.style.display='none';this.parentNode.innerHTML='<span class=\\'emoji-lg\\'>${p.emoji}</span>'">`:`<span class="emoji-lg">${p.emoji}</span>`;
+  document.getElementById('modal-brand').textContent=p.brand;
+  document.getElementById('modal-title').textContent=p.name;
+  document.getElementById('modal-price').innerHTML=`$${p.price.toLocaleString()}<div style="font-size:13px;color:var(--muted);font-weight:400;margin-top:4px;">≈ ${formatRWF(p.price)} RWF</div><div style="font-size:13px;font-weight:600;margin-top:8px;color:${outOfStock?'var(--accent2)':(lowStock?'var(--accent2)':'var(--success)')}">${outOfStock?'✕ Out of stock':(lowStock?`⚠ Only ${stock} left`:`✓ ${stock} in stock`)}</div>`;
+  document.getElementById('modal-specs').innerHTML=Object.entries(p.specs).map(([k,v])=>`<div class="spec-row"><span class="key">${escapeHtml(k)}</span><span class="val">${escapeHtml(v)}</span></div>`).join('');
+  const addBtn=document.getElementById('modal-add-btn');
+  addBtn.disabled=outOfStock;
+  addBtn.style.opacity=outOfStock?'0.5':'';
+  addBtn.style.cursor=outOfStock?'not-allowed':'';
+  addBtn.textContent=outOfStock?'Out of Stock':'🛒 Add to Cart';
+  addBtn.onclick=outOfStock?null:()=>{addToCart(id);closeModal();};
+  document.getElementById('product-modal').classList.add('open');
+}
+function closeModal(){document.getElementById('product-modal').classList.remove('open');}
+document.getElementById('product-modal').addEventListener('click',e=>{if(e.target===document.getElementById('product-modal'))closeModal();});
+
+function addToCart(id){
+  const p=products.find(x=>x.id===id); if(!p) return;
+  const stock=(p.stock!==undefined&&p.stock!==null)?p.stock:0;
+  if(stock<=0){showToast('This product is out of stock','#ff6b35');return;}
+  const ex=cart.find(x=>x.id===id);
+  const currentQty=ex?ex.qty:0;
+  if(currentQty>=stock){showToast(`Only ${stock} in stock — you already have the max in your cart`,'#ff6b35');return;}
+  if(ex) ex.qty++; else cart.push({...p,qty:1});
+  updateCartCount();
+  saveData();
+  showToast(`${p.name} added to cart 🛒`);
+}
+function updateCartCount(){document.getElementById('cart-count').textContent=cart.reduce((s,i)=>s+i.qty,0);}
+function openCart(){
+  const wasAlreadyOpen=document.getElementById('cart-modal').classList.contains('open');
+  const list=document.getElementById('cart-list');
+  if(!cart.length){list.innerHTML='<div style="text-align:center;padding:32px;color:var(--muted)">Your cart is empty 🛒</div>';}
+  else {
+    list.innerHTML=cart.map(item=>`
+      <div class="cart-item">
+        <div class="cart-thumb">${item.image?`<img src="${escapeHtml(item.image)}" onerror="this.style.display='none';this.parentNode.innerHTML='${item.emoji}'">`:`${item.emoji}`}</div>
+        <div>
+          <div class="cart-item-name">${escapeHtml(item.name)}</div>
+          <div class="cart-item-price">$${(item.price*item.qty).toLocaleString()}</div>
+          <div style="font-size:11px;color:var(--muted);">≈ ${formatRWF(item.price*item.qty)} RWF</div>
+          <div class="qty-stepper">
+            <button class="qty-btn" onclick="updateQty(${item.id},-1)">−</button>
+            <span class="qty-val">${item.qty}</span>
+            <button class="qty-btn" onclick="updateQty(${item.id},1)">+</button>
+          </div>
+        </div>
+        <button class="remove-btn" onclick="removeFromCart(${item.id})">✕</button>
+      </div>
+    `).join('');
+  }
+  document.getElementById('cart-total').textContent=`$${cart.reduce((s,i)=>s+i.price*i.qty,0).toLocaleString()}`;
+  if(!wasAlreadyOpen) resetPaymentMethodUI();
+  document.getElementById('cart-modal').classList.add('open');
+}
+function updateQty(id, delta){
+  const item = cart.find(x=>x.id===id);
+  if(!item) return;
+  if(delta>0){
+    const p=products.find(x=>x.id===id);
+    const stock=p?((p.stock!==undefined&&p.stock!==null)?p.stock:0):item.qty;
+    if(item.qty>=stock){showToast(`Only ${stock} in stock`,'#ff6b35');return;}
+  }
+  item.qty += delta;
+  if(item.qty <= 0){
+    cart = cart.filter(x=>x.id!==id);
+  }
+  updateCartCount();
+  saveData();
+  openCart();
+}
+function removeFromCart(id){cart=cart.filter(x=>x.id!==id);updateCartCount();saveData();openCart();}
+function closeCartModal(){document.getElementById('cart-modal').classList.remove('open');}
+document.getElementById('cart-modal').addEventListener('click',e=>{if(e.target===document.getElementById('cart-modal'))closeCartModal();});
+function checkout(){
+  if(!cart.length){showToast('Your cart is empty!','#ff6b35');return;}
+  const nameEl=document.getElementById('co-name');
+  const phoneEl=document.getElementById('co-phone');
+  const addressEl=document.getElementById('co-address');
+  const custName=nameEl.value.trim();
+  const custPhone=phoneEl.value.trim();
+  const custAddress=addressEl.value.trim();
+  nameEl.classList.remove('field-error');
+  phoneEl.classList.remove('field-error');
+  addressEl.classList.remove('field-error');
+  let hasError=false;
+  if(!custName){nameEl.classList.add('field-error');hasError=true;}
+  if(!custPhone){
+    phoneEl.classList.add('field-error');hasError=true;
+  } else if(!isValidRwandaPhone(custPhone)){
+    phoneEl.classList.add('field-error');hasError=true;
+    showToast('Please enter a valid phone number (078)','#ff6b35');
+    return;
+  }
+  if(!custAddress){addressEl.classList.add('field-error');hasError=true;}
+  if(hasError){showToast('Please fill in your name, phone, and delivery address','#ff6b35');return;}
+
+  // Re-check stock right before placing the order, in case it changed since items were added to the cart.
+  for(const item of cart){
+    const p=products.find(x=>x.id===item.id);
+    const available=p?((p.stock!==undefined&&p.stock!==null)?p.stock:0):0;
+    if(item.qty>available){
+      showToast(`Sorry, only ${available} of "${item.name}" left in stock. Please update your cart.`,'#ff6b35');
+      return;
+    }
+  }
+
+  const total=cart.reduce((s,i)=>s+i.price*i.qty,0);
+  if(!confirm(`Place order for $${total.toLocaleString()}?`)) return;
+
+  cart.forEach(item=>{
+    const p=products.find(x=>x.id===item.id);
+    if(p) p.stock=Math.max(0,((p.stock!==undefined&&p.stock!==null)?p.stock:0)-item.qty);
+  });
+
+  const paymentRefEl=document.getElementById('co-paymentref');
+  const paymentRef=paymentRefEl?paymentRefEl.value.trim():'';
+  // Mobile Money / Airtel orders start as "Awaiting Payment" since there's no backend to verify
+  // the payment automatically — Admin checks their own MoMo/Airtel SMS and confirms manually.
+  const status=selectedPaymentMethod==='cod'?'Pending':'Awaiting Payment';
+
+  const newOrder={
+    id:nextOrderId++,
+    customerName:custName,
+    customerPhone:custPhone,
+    address:custAddress,
+    items:cart.map(i=>({id:i.id,name:i.name,price:i.price,qty:i.qty})),
+    total,
+    paymentMethod:selectedPaymentMethod,
+    paymentRef,
+    status,
+    date:new Date().toISOString()
+  };
+  orders.push(newOrder);
+  addOrderNotification(newOrder);
+
+  cart=[];updateCartCount();
+  nameEl.value='';phoneEl.value='';addressEl.value='';
+  saveData();closeCartModal();
+  renderAdminList();
+  renderProducts(currentFilter==='all'?products:products.filter(p=>p.category===currentFilter));
+  renderDashboard();
+  localStorage.setItem('nexus_last_order', JSON.stringify(newOrder));
+  showLastOrderButtonIfAny();
+  showReceipt(newOrder);
+}
+
+// ---- ORDER RECEIPT ----
+function showReceipt(order){
+  document.getElementById('receipt-order-id').textContent=`Order #${order.id} · ${new Date(order.date).toLocaleString()}`;
+  const payMethod=order.paymentMethod||'cod';
+  const payLabel=PAYMENT_LABELS[payMethod]||PAYMENT_LABELS.cod;
+  document.getElementById('receipt-details').innerHTML=`
+    <div class="modal-specs">
+      <div class="spec-row"><span class="key">Name</span><span class="val">${escapeHtml(order.customerName)}</span></div>
+      <div class="spec-row"><span class="key">Phone</span><span class="val">${escapeHtml(order.customerPhone)}</span></div>
+      <div class="spec-row"><span class="key">Delivery Address</span><span class="val">${escapeHtml(order.address||'—')}</span></div>
+      <div class="spec-row"><span class="key">Payment Method</span><span class="val">${escapeHtml(payLabel)}</span></div>
+      ${order.paymentRef?`<div class="spec-row"><span class="key">Payment Reference</span><span class="val">${escapeHtml(order.paymentRef)}</span></div>`:''}
+      <div class="spec-row"><span class="key">Status</span><span class="val">${escapeHtml(order.status||'Pending')}</span></div>
+    </div>
+    ${payMethod!=='cod'?`<div class="pay-status-note" style="margin-bottom:16px">⏳ We'll confirm your Mobile Money payment shortly. Sending us the confirmation on WhatsApp below can speed this up.</div>`:''}
+    <div class="modal-specs">
+      ${order.items.map(i=>`<div class="spec-row"><span class="key">${escapeHtml(i.name)} ×${i.qty}</span><span class="val">$${(i.price*i.qty).toLocaleString()}</span></div>`).join('')}
+    </div>
+    <div class="cart-total"><span class="total-label">Total</span><span class="total-val">$${order.total.toLocaleString()}</span></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:2px;text-align:right;">≈ ${formatRWF(order.total)} RWF</div>
+  `;
+  const waBtn=document.getElementById('receipt-whatsapp-btn');
+  if(waBtn){
+    waBtn.style.display=storeSettings.whatsappNumber?'block':'none';
+    waBtn.onclick=()=>shareOrderViaWhatsApp(order);
+  }
+  document.getElementById('receipt-modal').classList.add('open');
+}
+function shareOrderViaWhatsApp(order){
+  if(!storeSettings.whatsappNumber){showToast('Store WhatsApp number is not set up yet','#ff6b35');return;}
+  const itemsList=order.items.map(i=>`- ${i.name} x${i.qty}`).join('\n');
+  const payMethod=order.paymentMethod||'cod';
+  const payLabel=PAYMENT_LABELS[payMethod]||PAYMENT_LABELS.cod;
+  const msg=`Muraho, ndagira ngo mbamenyeshe order yanjye #${order.id}:\n\n${itemsList}\n\nTotal: $${order.total.toLocaleString()} (≈ ${formatRWF(order.total)} RWF)\nPayment: ${payLabel}${order.paymentRef?` (Ref: ${order.paymentRef})`:''}\n\nMurakoze!`;
+  window.open(whatsappLink(storeSettings.whatsappNumber,msg),'_blank');
+}
+function closeReceiptModal(){document.getElementById('receipt-modal').classList.remove('open');}
+document.getElementById('receipt-modal').addEventListener('click',e=>{if(e.target===document.getElementById('receipt-modal'))closeReceiptModal();});
+function reopenLastReceipt(){
+  try{
+    const saved=localStorage.getItem('nexus_last_order');
+    if(!saved){showToast('No recent order found','#ff6b35');return;}
+    showReceipt(JSON.parse(saved));
+  }catch(e){console.error(e);}
+}
+function showLastOrderButtonIfAny(){
+  const btn=document.getElementById('last-order-btn');
+  if(!btn) return;
+  btn.style.display=localStorage.getItem('nexus_last_order')?'flex':'none';
+}
+
+function showToast(msg,color){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-msg').textContent=msg;
+  t.style.background=color||'var(--success)';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// LANGUAGE SWITCHER
+const LANGUAGES = {
+  en: { flag: "🇬🇧", label: "English" },
+  fr: { flag: "🇫🇷", label: "Français" },
+  rw: { flag: "🇷🇼", label: "Ikinyarwanda" }
+};
+
+function toggleLangMenu(event) {
+  event.stopPropagation();
+  document.getElementById("lang-menu").classList.toggle("open");
+}
+
+function setLanguage(lang) {
+  const { flag, label } = LANGUAGES[lang];
+  document.getElementById("lang-flag-current").textContent = flag;
+  document.getElementById("lang-label-current").textContent = label;
+
+  document.querySelectorAll(".lang-option").forEach(opt => {
+    opt.classList.toggle("active", opt.dataset.lang === lang);
+  });
+
+  document.getElementById("lang-menu").classList.remove("open");
+}
+
+document.addEventListener("click", () => {
+  document.getElementById("lang-menu").classList.remove("open");
+  const nm=document.getElementById("notif-menu");
+  if(nm) nm.classList.remove("open");
+});
+
+// init
+loadData();
+renderProducts(products);
+updateCartCount();
+updateNotifBadge();
+resumeAdminLockoutIfActive();
+showLastOrderButtonIfAny();
+updateWhatsAppFloatVisibility();
+</script>
+
+
+
+<script>
+(function(){
+  const K={promo:'nexus_added_promos',activePromo:'nexus_added_active_promo',wish:'nexus_added_wishlist',compare:'nexus_added_compare',reviews:'nexus_added_reviews',threshold:'nexus_added_lowstock_threshold',theme:'nexus_added_theme'};
+  const $=id=>document.getElementById(id); const read=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}; const write=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+  function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  window.nxTogglePanel=e=>{if(e)e.stopPropagation();$('nxPlusPanel').classList.toggle('open');nxRefresh();};
+  window.nxApplyPromo=()=>{const code=($('nxPromo').value||'').trim().toUpperCase();const promos=read(K.promo,[{code:'WELCOME10',percent:10,newCustomers:false,enabled:true}]);const p=promos.find(x=>x.code===code&&x.enabled);if(!p){$('nxPromoMsg').textContent='Invalid or disabled promo code.';return}write(K.activePromo,p);$('nxPromoMsg').textContent=`Applied ${p.percent}% discount: ${p.code}`;showToast&&showToast(`${p.code} applied — ${p.percent}% off`);};
+  function active(){return read(K.activePromo,null)}
+  function productsNow(){return window.products||[]}
+  function fillSelect(id){const s=$(id);if(!s)return;const ps=productsNow();s.innerHTML='<option value="">Choose a product</option>'+ps.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');}
+  function wishlist(){return read(K.wish,[])} function compare(){return read(K.compare,[])}
+  window.nxAddWish=()=>{const id=Number($('nxWishProduct').value);if(!id)return;const a=wishlist();if(!a.includes(id))a.push(id);write(K.wish,a);nxRefresh();};
+  window.nxAddCompare=()=>{const id=Number($('nxCompareProduct').value);if(!id)return;const a=compare();if(!a.includes(id)&&a.length<3)a.push(id);write(K.compare,a);nxRefresh();};
+  window.nxRemoveWish=id=>{write(K.wish,wishlist().filter(x=>x!==id));nxRefresh()}; window.nxRemoveCompare=id=>{write(K.compare,compare().filter(x=>x!==id));nxRefresh()};
+  let nxRating=5; window.nxSetRating=n=>{nxRating=n;[1,2,3,4,5].forEach(i=>{const b=$('nxStars').querySelector(`[data-r="${i}"]`);if(b)b.textContent=i<=n?'★':'☆'})};
+  window.nxSaveReview=()=>{const id=Number($('nxReviewProduct').value);if(!id)return;const a=read(K.reviews,[]);a.push({productId:id,name:($('nxReviewName').value||'Customer').trim(),text:($('nxReviewText').value||'').trim(),rating:nxRating,date:new Date().toISOString()});write(K.reviews,a);$('nxReviewText').value='';nxRefresh();};
+  window.nxTrackOrder=()=>{const q=($('nxTrack').value||'').replace(/^#/,'').trim();const os=window.orders||read('nexus_orders',[]);const o=os.find(x=>String(x.id)===q);$('nxTrackResult').innerHTML=o?`<b>Order #${esc(o.id)}</b><br>Customer: ${esc(o.customerName)}<br>Status: <span class="nx-pill">${esc(o.status||'Pending')}</span><br>Total: $${Number(o.total||0).toLocaleString()}<br><span class="nx-muted">${new Date(o.date).toLocaleString()}</span>`:'Order not found.';};
+  function renderWish(){const a=wishlist(),ps=productsNow();$('nxWishList').innerHTML=a.length?a.map(id=>{const p=ps.find(x=>x.id===id);return p?`<div>❤️ ${esc(p.name)} <button class="nx-btn" onclick="nxRemoveWish(${id})">Remove</button></div>`:''}).join(''):'No saved products.';}
+  function renderCompare(){const a=compare(),ps=productsNow();$('nxCompareList').innerHTML=a.length?'<b>Selected:</b>'+a.map(id=>{const p=ps.find(x=>x.id===id);return p?`<div>⚖️ ${esc(p.name)} — $${Number(p.price).toLocaleString()} <button class="nx-btn" onclick="nxRemoveCompare(${id})">×</button></div>`:''}).join(''):'No products selected.';}
+  function renderReviews(){const id=Number($('nxReviewProduct').value);const a=read(K.reviews,[]).filter(x=>x.productId===id);$('nxReviews').innerHTML=a.length?a.slice(-8).reverse().map(r=>`<div class="nx-card"><b>${esc(r.name)}</b> ${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}<br>${esc(r.text)}<br><span class="nx-muted">${new Date(r.date).toLocaleDateString()}</span></div>`).join(''):'No reviews yet.';}
+  function renderDash(){const os=window.orders||read('nexus_orders',[]);const sales=os.filter(o=>o.status!=='Cancelled').reduce((s,o)=>s+Number(o.total||0),0);const units=os.reduce((s,o)=>s+(o.items||[]).reduce((a,i)=>a+Number(i.qty||0),0),0);const low=productsNow().filter(p=>Number(p.stock??0)<=Number(read(K.threshold,2))).length;$('nxDashboard').innerHTML=`<div class="nx-card"><span class="nx-muted">Sales</span><div class="nx-stat">$${sales.toLocaleString()}</div></div><div class="nx-card"><span class="nx-muted">Orders</span><div class="nx-stat">${os.length}</div></div><div class="nx-card"><span class="nx-muted">Units Sold</span><div class="nx-stat">${units}</div></div><div class="nx-card"><span class="nx-muted">Low Stock</span><div class="nx-stat">${low}</div></div>`;}
+  window.nxSaveThreshold=()=>{let n=Math.max(0,Number($('nxThreshold').value||2));write(K.threshold,n);nxRefresh();};
+  function renderLow(){const t=Number(read(K.threshold,2));$('nxThreshold').value=t;const low=productsNow().filter(p=>Number(p.stock??0)<=t);$('nxLowStock').innerHTML=low.length?low.map(p=>`<div class="nx-alert">⚠️ <b>${esc(p.name)}</b> — ${Number(p.stock??0)} left</div>`).join(''):'<div class="nx-ok">✓ No products are at the low-stock threshold.</div>';}
+  window.nxToggleTheme=()=>{const cur=document.documentElement.dataset.nxTheme==='light'?'dark':'light';document.documentElement.dataset.nxTheme=cur;write(K.theme,cur);if(cur==='light'){document.documentElement.style.setProperty('--bg','#f5f8fa');document.documentElement.style.setProperty('--card','#ffffff');document.documentElement.style.setProperty('--text','#102027');document.documentElement.style.setProperty('--muted','#60757d');}else{document.documentElement.style.removeProperty('--bg');document.documentElement.style.removeProperty('--card');document.documentElement.style.removeProperty('--text');document.documentElement.style.removeProperty('--muted');}};
+  window.nxSMSLastOrder=()=>{const o=read('nexus_last_order',null);if(!o){showToast&&showToast('No recent order found','#ff6b35');return}const msg=`NEXUS Order #${o.id} confirmation. Total: $${Number(o.total||0).toLocaleString()}. Status: ${o.status||'Pending'}. Customer: ${o.customerName}.`;window.location.href='sms:'+encodeURIComponent(o.customerPhone||'')+'?body='+encodeURIComponent(msg);};
+  function nxRefresh(){fillSelect('nxWishProduct');fillSelect('nxCompareProduct');fillSelect('nxReviewProduct');$('nxStars').innerHTML=[1,2,3,4,5].map(i=>`<button data-r="${i}" onclick="nxSetRating(${i})">${i<=nxRating?'★':'☆'}</button>`).join('');renderWish();renderCompare();renderReviews();renderDash();renderLow();}
+  // Promo is additive: wrap the existing checkout function. The original function remains intact;
+  // this wrapper only adjusts cart prices during its execution and restores them immediately after.
+  function installPromoWrapper(){if(typeof window.checkout!=='function'||window.__nxCheckoutWrapped)return;const original=window.checkout;window.checkout=function(){const p=active();if(!p){return original.apply(this,arguments)}const c=window.cart||[];const factor=Math.max(0,1-Number(p.percent||0)/100);const old=c.map(i=>i.price);c.forEach(i=>i.price=Number(i.price)*factor);try{return original.apply(this,arguments)}finally{c.forEach((i,n)=>i.price=old[n]);}};window.__nxCheckoutWrapped=true;}
+  const oldInit=window.onload; window.addEventListener('load',()=>{setTimeout(()=>{installPromoWrapper();nxRefresh();const t=read(K.theme,null);if(t==='light'&&document.documentElement.dataset.nxTheme!=='light')nxToggleTheme();},50)});
+  // Admin promo manager: simple prompt-based creation, without changing the existing admin UI.
+  window.nxCreatePromo=()=>{const code=prompt('Promo code (e.g. WELCOME10):');if(!code)return;const percent=Number(prompt('Discount percent:',10));if(!percent||percent<1||percent>100)return;const a=read(K.promo,[]);a.push({code:code.trim().toUpperCase(),percent,enabled:true,createdAt:new Date().toISOString()});write(K.promo,a);alert('Promo created: '+code.trim().toUpperCase());};
+  // Add an optional admin shortcut when the admin panel exists.
+  document.addEventListener('DOMContentLoaded',()=>{const admin=document.querySelector('#admin-panel,#admin-section,.admin-panel');if(admin&&!document.getElementById('nx-admin-tools')){const d=document.createElement('div');d.id='nx-admin-tools';d.className='admin-table-card';d.style.margin='18px 0';d.innerHTML='<div class="table-header"><h3>✨ Added Store Tools</h3></div><div style="padding:16px"><button class="nx-btn primary" onclick="nxCreatePromo()">🎁 Create Promo Code</button> <button class="nx-btn" onclick="nxRefresh()">🔔 Refresh Low-Stock</button></div>';admin.prepend(d);}});
+  // Keep the add-on refreshed when existing app storage changes.
+  window.addEventListener('storage',()=>nxRefresh());
+  window.nxRefresh=nxRefresh;
+})();
+</script>
+
+<!-- ============================================================
+     NEXUS CHAT — phone-number based chat, powered by Firebase Firestore
+     ============================================================
+     SETUP REQUIRED: this feature does nothing until you paste your own
+     Firebase project's config into firebaseConfig below.
+     Uko wabibona: console.firebase.google.com > umushinga wawe (cyangwa
+     ushyireho umushinga mushya, ku buntu) > Project settings (ikimenyetso
+     cy' igikoresho ⚙️) > "Your apps" > ongeraho Web app (</>) > uzabona
+     "SDK setup and configuration" — ni ho uzakura aya magambo yose.
+     Firestore Database igomba na yo kuba yarafunguwe muri "Build > Firestore
+     Database > Create database".
+     ============================================================ -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
+import {
+  getFirestore, collection, doc, setDoc, addDoc, onSnapshot,
+  query, where, orderBy, serverTimestamp
+} from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js';
+
+// TODO: PASTE YOUR OWN FIREBASE PROJECT CONFIG HERE ---------------------
+const firebaseConfig = {
+  apiKey: "PASTE_YOUR_API_KEY_HERE",
+  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
+  projectId: "PASTE_YOUR_PROJECT_ID",
+  storageBucket: "PASTE_YOUR_PROJECT.appspot.com",
+  messagingSenderId: "PASTE_YOUR_SENDER_ID",
+  appId: "PASTE_YOUR_APP_ID"
+};
+// ------------------------------------------------------------------------
+
+const CHAT_CONFIGURED = !!(firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('PASTE_'));
+let db = null;
+if (CHAT_CONFIGURED) {
+  try {
+    const chatApp = initializeApp(firebaseConfig);
+    db = getFirestore(chatApp);
+  } catch (e) {
+    console.error('Firebase init failed', e);
+  }
+}
+
+function chatEsc(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+// Reuses the app's own Rwanda-number normalizer (toWhatsAppNumber) when present,
+// so a number typed as 0788..., 788..., or +250788... always maps to the same id.
+function isValidInternationalPhone(phone) {
+  const cleaned = String(phone || '').replace(/[\s().-]/g, '');
+  return /^\+?[1-9]\d{7,14}$/.test(cleaned);
+}
+function normPhone(p) {
+  return (typeof toWhatsAppNumber === 'function') ? toWhatsAppNumber(p) : String(p || '').replace(/[^\d]/g, '');
+}
+function conversationIdFor(a, b) {
+  return [normPhone(a), normPhone(b)].sort().join('_');
+}
+function getMyChatPhone() {
+  return localStorage.getItem('nexus_chat_identity') || null;
+}
+function getMyChatProfile() {
+  try {
+    return JSON.parse(localStorage.getItem('nexus_chat_profile') || 'null');
+  } catch (_) {
+    return null;
+  }
+}
+function setMyChatProfile(profile) {
+  localStorage.setItem('nexus_chat_profile', JSON.stringify(profile));
+  localStorage.setItem('nexus_chat_identity', profile.phone);
+}
+function setMyChatPhone(p) {
+  localStorage.setItem('nexus_chat_identity', p);
+}
+function clearMyChatPhone() {
+  localStorage.removeItem('nexus_chat_identity');
+  localStorage.removeItem('nexus_chat_profile');
+}
+
+let chatUnsubUsers = null, chatUnsubMessages = null;
+let chatUsersCache = [];
+let chatOpenThreadWith = null; // phone of open conversation, or null = contact list
+
+window.openChatHub = function () {
+  document.getElementById('chat-modal').classList.add('open');
+  chatOpenThreadWith = null;
+  renderChatModal();
+  startUsersListener();
+};
+window.closeChatModal = function () {
+  document.getElementById('chat-modal').classList.remove('open');
+  stopMessagesListener();
+};
+document.getElementById('chat-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('chat-modal')) window.closeChatModal();
+});
+
+function startUsersListener() {
+  if (!db || chatUnsubUsers) return;
+  chatUnsubUsers = onSnapshot(collection(db, 'chat_users'), snap => {
+    chatUsersCache = snap.docs.map(d => d.data())
+      .sort((a, b) => (b.joinedAt && b.joinedAt.seconds || 0) - (a.joinedAt && a.joinedAt.seconds || 0));
+    if (getMyChatPhone() && chatOpenThreadWith === null) renderChatModal();
+  }, err => console.error('chat_users listener error', err));
+}
+
+window.chatJoin = async function () {
+  const input = document.getElementById('chat-phone-input');
+  const raw = input.value.trim();
+  const firstName = (document.getElementById('chat-first-name-input')?.value || '').trim();
+  const lastName = (document.getElementById('chat-last-name-input')?.value || '').trim();
+  if (!firstName || !lastName) {
+    showToast('Enter your first name and last name', '#ff6b35');
+    return;
+  }
+  if (!isValidInternationalPhone(raw)) {
+    showToast('Enter a valid international phone number, for example +250788123456', '#ff6b35');
+    return;
+  }
+  const phone = normPhone(raw);
+  const country = (document.getElementById('chat-country-input')?.value || '').trim();
+  const displayName = [firstName, lastName].filter(Boolean).join(' ');
+
+  // Save the complete chat profile permanently in this browser.
+  // It remains available after closing the modal, refreshing the page,
+  // or reopening the website until the user chooses "Leave Chat".
+  const profile = {
+    phone,
+    displayPhone: raw,
+    firstName,
+    lastName,
+    country: country || 'International',
+    displayName: displayName || raw,
+    savedAt: new Date().toISOString()
+  };
+  setMyChatProfile(profile);
+
+  try {
+    await setDoc(doc(db, 'chat_users', phone), {
+      ...profile,
+      joinedAt: serverTimestamp()
+    }, { merge: true });
+    showToast('Winjiye muri Chat ✅');
+    renderChatModal();
+  } catch (e) {
+    console.error('chatJoin failed', e);
+    showToast('Byanze kwinjira muri Chat — ongera ugerageze', '#ff6b35');
+  }
+};
+
+window.chatLeave = function () {
+  clearMyChatPhone();
+  chatOpenThreadWith = null;
+  stopMessagesListener();
+  renderChatModal();
+};
+
+window.chatOpenThread = function (phone) {
+  chatOpenThreadWith = phone;
+  renderChatModal();
+  startMessagesListener();
+};
+window.chatBackToContacts = function () {
+  chatOpenThreadWith = null;
+  stopMessagesListener();
+  renderChatModal();
+};
+
+function stopMessagesListener() {
+  if (chatUnsubMessages) { chatUnsubMessages(); chatUnsubMessages = null; }
+}
+function startMessagesListener() {
+  stopMessagesListener();
+  const me = getMyChatPhone();
+  if (!db || !me || !chatOpenThreadWith) return;
+  const cid = conversationIdFor(me, chatOpenThreadWith);
+  const q = query(collection(db, 'chat_messages'), where('conversationId', '==', cid), orderBy('timestamp', 'asc'));
+  chatUnsubMessages = onSnapshot(q, snap => {
+    renderMessages(snap.docs.map(d => d.data()));
+  }, err => console.error('chat_messages listener error', err));
+}
+
+window.chatSendMessage = async function () {
+  const input = document.getElementById('chat-msg-input');
+  const text = input.value.trim();
+  if (!text || !chatOpenThreadWith) return;
+  const me = getMyChatPhone();
+  const cid = conversationIdFor(me, chatOpenThreadWith);
+  input.value = '';
+  try {
+    await addDoc(collection(db, 'chat_messages'), {
+      conversationId: cid, from: normPhone(me), to: normPhone(chatOpenThreadWith),
+      text, timestamp: serverTimestamp()
+    });
+  } catch (e) {
+    console.error('send failed', e);
+    showToast('Ubutumwa ntibwoherejwe — ongera ugerageze', '#ff6b35');
+  }
+};
+
+function renderMessages(msgs) {
+  const wrap = document.getElementById('chat-messages-list');
+  if (!wrap) return;
+  const me = normPhone(getMyChatPhone());
+  wrap.innerHTML = msgs.map(m => {
+    const mine = m.from === me;
+    const t = m.timestamp && m.timestamp.toDate ? m.timestamp.toDate() : null;
+    const timeStr = t ? t.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '···';
+    return `<div class="chat-bubble ${mine ? 'mine' : 'theirs'}">${chatEsc(m.text)}<span class="chat-bubble-time">${timeStr}</span></div>`;
+  }).join('');
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function renderChatModal() {
+  const body = document.getElementById('chat-modal-body');
+  if (!body) return;
+
+  if (!CHAT_CONFIGURED) {
+    body.innerHTML = `
+      <div class="chat-head"><div class="chat-head-title">💬 Chat</div></div>
+      <div class="chat-setup-warning">Chat ntiyashyizweho neza kugeza ubu — Admin agomba gushyiramo Firebase config muri code (reba amabwiriza yatanzwe hamwe n'iyi porogaramu).</div>
+      <div class="modal-actions" style="margin:0 20px 20px"><button class="btn-close-modal" style="flex:1" onclick="closeChatModal()">Funga</button></div>`;
+    return;
+  }
+
+  const savedProfile = getMyChatProfile();
+  const me = getMyChatPhone() || (savedProfile && savedProfile.phone);
+
+  if (!me) {
+    body.innerHTML = `
+      <div class="chat-head"><div class="chat-head-title">💬 International Chat</div><div class="chat-head-sub">Connect and communicate with people from different countries.</div></div>
+      <div class="chat-join">
+        <div class="input-group" style="margin-bottom:10px"><label>First Name</label><input type="text" id="chat-first-name-input" placeholder="First name"></div>
+        <div class="input-group" style="margin-bottom:10px"><label>Last Name</label><input type="text" id="chat-last-name-input" placeholder="Last name"></div>
+        <div class="input-group" style="margin-bottom:10px"><label>Country</label><input type="text" id="chat-country-input" placeholder="Your country"></div>
+        <div class="input-group" style="margin-bottom:0"><label>International Phone Number</label><input type="text" id="chat-phone-input" placeholder="Example: +250788123456" onkeydown="if(event.key==='Enter')chatJoin()"></div>
+        <p>Use the international format with country code. SMS verification is not enabled yet.</p>
+        <button class="btn-add-cart" style="width:100%" onclick="chatJoin()">Join International Chat</button>
+      </div>
+      <div class="modal-actions" style="margin:0 20px 20px"><button class="btn-close-modal" style="flex:1" onclick="closeChatModal()">Funga</button></div>`;
+    return;
+  }
+
+  if (chatOpenThreadWith) {
+    body.innerHTML = `
+      <div class="chat-thread-head">
+        <button class="chat-back-btn" onclick="chatBackToContacts()">←</button>
+        <div class="chat-thread-name">${chatEsc((chatUsersCache.find(u => u.phone === chatOpenThreadWith) || {}).displayName || chatOpenThreadWith)}</div>
+      </div>
+      <div class="chat-messages" id="chat-messages-list"></div>
+      <div class="chat-input-row">
+        <input type="text" id="chat-msg-input" placeholder="Type your message..." onkeydown="if(event.key==='Enter')chatSendMessage()">
+        <button class="chat-send-btn" onclick="chatSendMessage()">➤</button>
+      </div>`;
+    return;
+  }
+
+  const others = chatUsersCache.filter(u => u.phone !== normPhone(me));
+  body.innerHTML = `
+    <div class="chat-head">
+      <div class="chat-head-title">💬 International Chat</div>
+      <div class="chat-head-sub">You are ${chatEsc(me)} · <button class="chat-leave-link" onclick="chatLeave()">Si njye / Sohoka</button></div>
+    </div>
+    <div class="chat-contacts">
+      ${others.length ? others.map(u => `
+        <div class="chat-contact-row" onclick="chatOpenThread('${chatEsc(u.phone)}')">
+          <div class="chat-contact-avatar">${chatEsc(String(u.displayPhone || u.phone).slice(-2))}</div>
+          <div>
+            <div class="chat-contact-phone">${chatEsc(u.displayName || u.displayPhone || u.phone)}</div>
+            <div class="chat-contact-meta">${chatEsc(u.country || 'International')} · Click to chat</div>
+          </div>
+        </div>`).join('') : '<div class="chat-empty">No other users have joined yet. Invite people from different countries to start chatting.</div>'}
+    </div>
+    <div class="modal-actions" style="margin:14px 20px 20px"><button class="btn-close-modal" style="flex:1" onclick="closeChatModal()">Funga</button></div>`;
+}
+</script>
+
+<!-- React Admin Chat integration: added without changing the existing NEXUS pages -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  #chat-modal-body:has(#nexus-react-chat-root){padding:0!important;overflow:hidden!important}
+  #nexus-react-chat-root{height:100%;min-height:0;display:flex;flex-direction:column}
+  #nexus-react-chat-root *{box-sizing:border-box}
+</style>
+<script type="text/babel">
+(() => {
+  const {useState,useRef,useEffect}=React;
+  const STORAGE_KEY='chat-messages';
+  const POLL_MS=2500;
+  const ADMIN_META={A:{label:'Admin A',color:'#45B8AC'},B:{label:'Admin B',color:'#E8935A'}};
+
+  const storage={
+    async get(key){
+      try{return {value:localStorage.getItem(key)}}catch(e){return null}
+    },
+    async set(key,value){try{localStorage.setItem(key,value);return true}catch(e){return false}}
+  };
+
+  function AdminChatApp(){
+    const [profile,setProfile]=useState(()=>{try{return JSON.parse(localStorage.getItem('nexus-chat-profile'))||null}catch(e){return null}});
+    const [firstName,setFirstName]=useState(''),[lastName,setLastName]=useState(''),[phone,setPhone]=useState('');
+    const [adminId,setAdminId]=useState(null),[messages,setMessages]=useState([]),[input,setInput]=useState(''),[sending,setSending]=useState(false),[initializing,setInitializing]=useState(true),[error,setError]=useState(null),[confirmingClear,setConfirmingClear]=useState(false);
+    const listRef=useRef(null),sendingRef=useRef(false);
+    const otherAdminId=adminId==='A'?'B':'A';
+    useEffect(()=>{sendingRef.current=sending},[sending]);
+    const scroll=()=>requestAnimationFrame(()=>{if(listRef.current)listRef.current.scrollTop=listRef.current.scrollHeight});
+    const fetchMessages=async()=>{if(sendingRef.current)return;try{const r=await storage.get(STORAGE_KEY),p=r&&r.value?JSON.parse(r.value):[];setMessages(p);scroll()}catch(e){}finally{setInitializing(false)}};
+    useEffect(()=>{if(adminId){fetchMessages();const i=setInterval(fetchMessages,POLL_MS);return()=>clearInterval(i)}},[adminId]);
+    const register=()=>{
+      if(!firstName.trim()||!lastName.trim()||!phone.trim()){setError('Please enter your first name, last name, and phone number.');return}
+      const p={firstName:firstName.trim(),lastName:lastName.trim(),phone:phone.trim(),displayName:(firstName.trim()+' '+lastName.trim())};
+      localStorage.setItem('nexus-chat-profile',JSON.stringify(p));setProfile(p);setError(null);
+    };
+    const send=async()=>{const text=input.trim();if(!text||sending||!adminId)return;setSending(true);setError(null);const m={id:Date.now()+'-'+Math.random().toString(36).slice(2,7),admin:adminId,text,ts:Date.now(),sender:profile};try{const r=await storage.get(STORAGE_KEY);const current=r&&r.value?JSON.parse(r.value):[];const ok=await storage.set(STORAGE_KEY,JSON.stringify([...current,m]));if(!ok)throw Error();setMessages([...current,m]);setInput('');scroll()}catch(e){setError('Could not send the message.')}finally{setSending(false)}};
+    const clear=async()=>{try{await storage.set(STORAGE_KEY,'[]');setMessages([])}catch(e){setError('Could not clear conversation')}finally{setConfirmingClear(false)}};
+    const inputStyle={width:'100%',padding:12,borderRadius:10,border:'1px solid #232D3F',background:'#0E1520',color:'#E4E8EE',marginTop:6};
+    if(!profile)return <div style={{padding:24,overflowY:'auto'}}><div style={{background:'#161E2B',border:'1px solid #232D3F',borderRadius:16,padding:24}}><div style={{color:'#45B8AC',fontSize:12,marginBottom:8}}>NEXUS INTERNATIONAL CHAT</div><h2 style={{margin:'0 0 8px',fontSize:22}}>Create your chat profile</h2><p style={{color:'#7C8AA0',fontSize:14,lineHeight:1.5}}>Register before entering the chat. Your first name, last name, and phone number identify you in this chat.</p><label>First Name<input value={firstName} onChange={e=>setFirstName(e.target.value)} placeholder="First name" style={inputStyle}/></label><label>Last Name<input value={lastName} onChange={e=>setLastName(e.target.value)} placeholder="Last name" style={inputStyle}/></label><label>Phone Number<input value={phone} onChange={e=>setPhone(e.target.value)} placeholder="+250788123456" style={inputStyle}/></label><button onClick={register} style={{width:'100%',marginTop:18,padding:13,border:0,borderRadius:10,background:'#45B8AC',fontWeight:700,cursor:'pointer'}}>Register and Continue</button>{error&&<div style={{color:'#E0645A',fontSize:12,marginTop:10}}>{error}</div>}</div></div>;
+    return <div className="nexus-react-chat" style={{height:'100%',minHeight:0,display:'flex',flexDirection:'column',background:'#0E1520',color:'#E4E8EE',fontFamily:'Arial,sans-serif'}}>
+      {!adminId?<div style={{padding:24,overflowY:'auto'}}><div style={{background:'#161E2B',border:'1px solid #232D3F',borderRadius:16,padding:24}}><div style={{color:'#7C8AA0',fontSize:12,marginBottom:8}}>Welcome, {profile.displayName}</div><h2 style={{margin:'0 0 8px',fontSize:22}}>Choose your chat seat</h2><p style={{color:'#7C8AA0',fontSize:14,lineHeight:1.5}}>Phone: {profile.phone}</p>{['A','B'].map(id=><button key={id} onClick={()=>setAdminId(id)} style={{display:'flex',alignItems:'center',gap:12,width:'100%',padding:14,marginTop:10,borderRadius:12,border:'1px solid #232D3F',background:'#161E2B',color:'#E4E8EE',cursor:'pointer',textAlign:'left'}}><b style={{background:ADMIN_META[id].color,color:'#0E1520',padding:9,borderRadius:8}}>{id}</b>Join as {ADMIN_META[id].label}</button>)}<button onClick={()=>{localStorage.removeItem('nexus-chat-profile');setProfile(null)}} style={{marginTop:16,background:'transparent',border:0,color:'#7C8AA0',cursor:'pointer'}}>Change registration</button></div></div>:
+      <><div style={{padding:'12px 16px',borderBottom:'1px solid #232D3F',display:'flex',justifyContent:'space-between',alignItems:'center'}}><div><b>● Admin Chat</b><div style={{fontSize:11,color:'#7C8AA0'}}>{profile.displayName} · {profile.phone}</div></div><span><button onClick={()=>setAdminId(null)} style={btn}>↔</button><button onClick={()=>setConfirmingClear(true)} style={btn}>🗑</button></span></div>{confirmingClear&&<div style={{padding:10,borderBottom:'1px solid #232D3F',fontSize:12}}>Clear conversation for both admins? <button onClick={clear}>Clear</button> <button onClick={()=>setConfirmingClear(false)}>Cancel</button></div>}<div ref={listRef} style={{flex:1,overflowY:'auto',padding:16}}>{initializing?'Loading conversation...':messages.length===0?<p style={{color:'#7C8AA0',textAlign:'center'}}>No messages yet.</p>:messages.map(m=><div key={m.id} style={{display:'flex',justifyContent:m.admin===adminId?'flex-end':'flex-start',marginBottom:12}}><div style={{maxWidth:'78%',background:'#1D2636',borderLeft:m.admin===adminId?'none':'3px solid '+(ADMIN_META[m.admin]?.color||'#45B8AC'),borderRight:m.admin===adminId?'3px solid '+(ADMIN_META[m.admin]?.color||'#45B8AC'):'none',borderRadius:12,padding:'9px 12px',fontSize:14}}>{m.text}<div style={{fontSize:10,color:'#7C8AA0',marginTop:5}}>{m.sender?.displayName||m.admin} · {new Date(m.ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div></div></div>)}</div><div style={{padding:12,borderTop:'1px solid #232D3F',display:'flex',gap:8}}><textarea value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}}} placeholder={'Message '+ADMIN_META[otherAdminId].label+'...'} rows="1" style={{flex:1,resize:'none',background:'#161E2B',color:'#E4E8EE',border:'1px solid #232D3F',borderRadius:12,padding:10}}/><button disabled={!input.trim()||sending} onClick={send} style={{border:0,borderRadius:12,padding:'0 15px',background:'#45B8AC',cursor:'pointer'}}>↑</button></div>{error&&<div style={{color:'#E0645A',fontSize:12,padding:'0 12px 8px'}}>{error}</div>}</>}
+    </div>
+  }
+  const btn={background:'transparent',border:0,color:'#E4E8EE',fontSize:16,cursor:'pointer',marginLeft:8};
+  window.openChatHub=function(){document.getElementById('chat-modal').classList.add('open');const body=document.getElementById('chat-modal-body');body.innerHTML='<div id="nexus-react-chat-root"></div>';ReactDOM.createRoot(document.getElementById('nexus-react-chat-root')).render(<AdminChatApp/>)};
+})();
+</script>
+
+
+<!-- NEXUS ADDITIONAL E-COMMERCE FEATURES: additive layer; existing project preserved -->
+<style>
+#nexus-tools-launcher{display:none;position:fixed;right:22px;bottom:22px;z-index:9998;border:0;border-radius:999px;padding:13px 17px;background:#00d4ff;color:#080c10;font-weight:800;cursor:pointer;box-shadow:0 8px 30px #0006}
+#nexus-tools-modal{display:none;position:fixed;inset:0;background:#0009;z-index:9999;align-items:center;justify-content:center;padding:18px}
+#nexus-tools-modal.open{display:flex}
+.nx-tools-card{width:min(900px,100%);max-height:90vh;overflow:auto;background:#0e1419;color:#eaf2f7;border:1px solid #263746;border-radius:18px;padding:22px}
+.nx-tools-head{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid #263746;padding-bottom:14px}
+.nx-tools-close{background:transparent;color:#fff;border:1px solid #40505e;border-radius:8px;padding:7px 11px;cursor:pointer}
+.nx-tools-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.nx-tools-tabs button{background:#131920;color:#dce8ef;border:1px solid #2b3a46;border-radius:9px;padding:9px 12px;cursor:pointer}
+.nx-tools-tabs button.active{background:#00d4ff;color:#080c10}
+.nx-tool-panel{display:none}.nx-tool-panel.active{display:block}
+.nx-tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.nx-tool-box{background:#131920;border:1px solid #263746;border-radius:12px;padding:14px}
+.nx-tool-box h4{margin:0 0 8px}.nx-tool-box p{color:#9fb0bc;font-size:13px;line-height:1.5}
+.nx-tool-input,.nx-tool-select{width:100%;padding:10px;margin:6px 0;background:#0b1116;color:#fff;border:1px solid #344653;border-radius:8px}
+.nx-tool-btn{border:0;border-radius:8px;padding:10px 13px;background:#00d4ff;color:#080c10;font-weight:700;cursor:pointer}
+.nx-tool-table{width:100%;border-collapse:collapse;font-size:13px}.nx-tool-table th,.nx-tool-table td{border-bottom:1px solid #263746;padding:9px;text-align:left}
+.nx-tool-note{color:#9fb0bc;font-size:12px}
+</style>
+<button id="nexus-tools-launcher" type="button">⚙ Store Tools</button>
+<div id="nexus-tools-modal" aria-hidden="true">
+ <section class="nx-tools-card">
+  <div class="nx-tools-head"><div><h2 style="margin:0">NEXUS Store Management</h2><div class="nx-tool-note">Added features — your original project remains available.</div></div><button class="nx-tools-close" id="nx-tools-close">Close</button></div>
+  <div class="nx-tools-tabs">
+   <button class="active" data-nx-tab="checkout">Checkout</button><button data-nx-tab="orders">Orders</button><button data-nx-tab="stock">Stock</button><button data-nx-tab="wishlist">Wishlist</button><button data-nx-tab="reviews">Reviews</button><button data-nx-tab="account">Customer Account</button><button data-nx-tab="reports">Reports</button>
+  </div>
+  <div id="nx-checkout" class="nx-tool-panel active">
+   <h3>Checkout information</h3><div class="nx-tool-grid">
+    <div class="nx-tool-box"><input class="nx-tool-input" id="nx-name" placeholder="Customer name"><input class="nx-tool-input" id="nx-phone" placeholder="Phone number"><input class="nx-tool-input" id="nx-email" placeholder="Email address"></div>
+    <div class="nx-tool-box"><input class="nx-tool-input" id="nx-address" placeholder="Delivery address"><select class="nx-tool-select" id="nx-payment"><option>Cash on delivery</option><option>Mobile Money</option><option>Bank payment</option><option>Card payment</option></select><button class="nx-tool-btn" id="nx-place-order">Confirm order</button></div>
+   </div><p class="nx-tool-note">This is a local demo checkout. Connect a secure backend for real payments.</p>
+  </div>
+  <div id="nx-orders" class="nx-tool-panel"><h3>Order management</h3><table class="nx-tool-table"><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th></tr></thead><tbody id="nx-orders-body"></tbody></table></div>
+  <div id="nx-stock" class="nx-tool-panel"><h3>Stock management</h3><div class="nx-tool-grid"><div class="nx-tool-box"><h4>Stock rules</h4><p>Use this area to track low-stock and out-of-stock products.</p><button class="nx-tool-btn" id="nx-stock-scan">Scan current products</button></div><div class="nx-tool-box" id="nx-stock-result"><p>No scan performed.</p></div></div></div>
+  <div id="nx-wishlist" class="nx-tool-panel"><h3>Wishlist</h3><p>Add product names below. They are saved in this browser.</p><input class="nx-tool-input" id="nx-wish-input" placeholder="Product name"><button class="nx-tool-btn" id="nx-wish-add">Add to wishlist</button><ul id="nx-wish-list"></ul></div>
+  <div id="nx-reviews" class="nx-tool-panel"><h3>Product reviews</h3><input class="nx-tool-input" id="nx-review-product" placeholder="Product name"><input class="nx-tool-input" id="nx-review-text" placeholder="Write a review"><select class="nx-tool-select" id="nx-review-rating"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select><button class="nx-tool-btn" id="nx-review-add">Save review</button><div id="nx-review-list"></div></div>
+  <div id="nx-account" class="nx-tool-panel"><h3>Customer account</h3><div class="nx-tool-box"><input class="nx-tool-input" id="nx-account-name" placeholder="Your name"><input class="nx-tool-input" id="nx-account-email" placeholder="Your email"><button class="nx-tool-btn" id="nx-account-save">Save account</button><p id="nx-account-result" class="nx-tool-note"></p></div></div>
+  <div id="nx-reports" class="nx-tool-panel"><h3>Reports</h3><div class="nx-tool-grid"><div class="nx-tool-box"><h4 id="nx-report-orders">0</h4><p>Total local orders</p></div><div class="nx-tool-box"><h4 id="nx-report-wishlist">0</h4><p>Wishlist items</p></div><div class="nx-tool-box"><h4 id="nx-report-reviews">0</h4><p>Reviews</p></div></div><button class="nx-tool-btn" id="nx-export-data">Export local data</button></div>
+ </section>
+</div>
+<script>
+(function(){
+ const $=id=>document.getElementById(id);
+ const get=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}};
+ const set=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+ const modal=$('nexus-tools-modal');
+ $('nexus-tools-launcher').onclick=()=>{modal.classList.add('open');modal.setAttribute('aria-hidden','false');renderAll()};
+ $('nx-tools-close').onclick=()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true')};
+ modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('open')});
+ document.querySelectorAll('[data-nx-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-nx-tab]').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.nx-tool-panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('nx-'+b.dataset.nxTab).classList.add('active');renderAll()});
+ function renderAll(){
+  const orders=get('nexus-orders',[]),wish=get('nexus-wishlist',[]),reviews=get('nexus-reviews',[]);
+  $('nx-orders-body').innerHTML=orders.map(o=>'<tr><td>'+o.id+'</td><td>'+o.name+'</td><td>'+o.total+'</td><td>'+o.status+'</td></tr>').join('')||'<tr><td colspan="4">No orders yet</td></tr>';
+  $('nx-wish-list').innerHTML=wish.map((x,i)=>'<li>'+x+' <button onclick="window.nxRemoveWish('+i+')">Remove</button></li>').join('')||'<li>No wishlist items</li>';
+  $('nx-review-list').innerHTML=reviews.map(x=>'<div class="nx-tool-box"><b>'+x.product+'</b> — '+x.rating+'/5<br>'+x.text+'</div>').join('')||'<p class="nx-tool-note">No reviews yet.</p>';
+  $('nx-report-orders').textContent=orders.length;$('nx-report-wishlist').textContent=wish.length;$('nx-report-reviews').textContent=reviews.length;
+ }
+ window.nxRemoveWish=i=>{let a=get('nexus-wishlist',[]);a.splice(i,1);set('nexus-wishlist',a);renderAll()};
+ $('nx-place-order').onclick=()=>{if(!$('nx-name').value.trim()){alert('Enter customer name');return}let a=get('nexus-orders',[]);a.push({id:'NX-'+Date.now(),name:$('nx-name').value,total:'Cart total',status:'Pending',phone:$('nx-phone').value,address:$('nx-address').value,payment:$('nx-payment').value});set('nexus-orders',a);alert('Order saved locally');renderAll()};
+ $('nx-wish-add').onclick=()=>{let v=$('nx-wish-input').value.trim();if(v){let a=get('nexus-wishlist',[]);a.push(v);set('nexus-wishlist',a);$('nx-wish-input').value='';renderAll()}};
+ $('nx-review-add').onclick=()=>{let p=$('nx-review-product').value.trim(),t=$('nx-review-text').value.trim();if(p&&t){let a=get('nexus-reviews',[]);a.push({product:p,text:t,rating:$('nx-review-rating').value});set('nexus-reviews',a);$('nx-review-text').value='';renderAll()}};
+ $('nx-account-save').onclick=()=>{set('nexus-account',{name:$('nx-account-name').value,email:$('nx-account-email').value});$('nx-account-result').textContent='Account saved in this browser.'};
+ $('nx-stock-scan').onclick=()=>{$('nx-stock-result').innerHTML='<p>Product stock scan completed. Connect your product database for automatic quantities.</p>'};
+ $('nx-export-data').onclick=()=>{const data={orders:get('nexus-orders',[]),wishlist:get('nexus-wishlist',[]),reviews:get('nexus-reviews',[]),account:get('nexus-account',{})};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='nexus-local-data.json';a.click();URL.revokeObjectURL(a.href)};
+ renderAll();
+})();
+</script>
+
+</body></html><meta charset="UTF-8">
+<title>NEXUS Electronics — Footer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
+
+  * { box-sizing: border-box; }
+
+  body { margin: 0; background: #05070c; }
+
+  .ft-wrap {
+    background: #080c14;
+    border-top: 0.5px solid rgba(255,255,255,0.08);
+    padding: 3rem 2rem 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .ft-top {
+    display: grid;
+    grid-template-columns: 1.5fr repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+  }
+
+  @media (max-width: 720px) {
+    .ft-top { grid-template-columns: 1fr 1fr; }
+  }
+
+  .ft-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.12em;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .ft-logo span { color: #00c3ff; }
+
+  .ft-tagline {
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .ft-follow {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 12px;
+  }
+
+  .ft-socials { display: flex; gap: 10px; }
+
+  .ft-social {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 0.5px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .ft-social svg { width: 16px; height: 16px; display: block; }
+
+  .ft-social:hover {
+    border-color: rgba(0,195,255,0.5);
+    transform: translateY(-2px);
+  }
+
+  .ft-social:focus-visible {
+    outline: 2px solid #00c3ff;
+    outline-offset: 2px;
+  }
+
+  .ft-col-title {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+
+  .ft-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .ft-links a {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .ft-links a:hover { color: #00c3ff; }
+
+  .ft-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ft-contact a {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .ft-contact a:hover { color: #00c3ff; }
+
+  .ft-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,195,255,0.07);
+    border: 0.5px solid rgba(0,195,255,0.2);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: rgba(0,195,255,0.8);
+    margin-top: 14px;
+  }
+
+  .ft-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00c3ff;
+  }
+
+  .ft-bottom {
+    border-top: 0.5px solid rgba(255,255,255,0.06);
+    padding-top: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .ft-copy { font-size: 12px; color: rgba(255,255,255,0.25); }
+
+  .ft-legal { display: flex; gap: 20px; flex-wrap: wrap; }
+
+  .ft-legal a {
+    font-size: 12px;
+    color: rgba(255,255,255,0.25);
+    text-decoration: none;
+  }
+
+  .ft-legal a:hover { color: rgba(255,255,255,0.5); }
+
+  .ft-credit {
+    font-size: 11px;
+    color: rgba(255,255,255,0.15);
+    text-align: center;
+    margin-top: 1rem;
+  }
+</style>
+
+<footer class="ft-wrap">
+
+  <div class="ft-top">
+
+    <div>
+      <div class="ft-logo">NEX<span>US</span></div>
+      <div class="ft-tagline">Premium Electronics</div>
+
+      <div class="ft-follow">Follow us on social media</div>
+      <div class="ft-socials">
+
+        <a class="ft-social" href="https://www.facebook.com/profile.php?id=100088697983212" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="24" fill="#1877F2"></circle>
+            <path fill="#fff" d="M27.3 24.9h-3.1v11.9h-4.9V24.9h-2.2V20.6h2.2v-2.5c0-3.3 1.4-5.3 5.3-5.3h3.3v4.3h-2.1c-1.5 0-1.6.6-1.6 1.6v1.9h3.7l-.6 4.3z"></path>
+          </svg>
+        </a>
+
+        <a class="ft-social" href="https://www.instagram.com/cheetah8319?igsh=MTMyN2UzOGZiNnZ5Ng==" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="igGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#FFDD55"></stop>
+                <stop offset="30%" stop-color="#FF543E"></stop>
+                <stop offset="60%" stop-color="#C837AB"></stop>
+                <stop offset="100%" stop-color="#5B51D8"></stop>
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#igGradient)"></rect>
+            <rect x="14" y="14" width="20" height="20" rx="6" fill="none" stroke="#fff" stroke-width="2.3"></rect>
+            <circle cx="24" cy="24" r="5.5" fill="none" stroke="#fff" stroke-width="2.3"></circle>
+            <circle cx="31" cy="17" r="1.6" fill="#fff"></circle>
+          </svg>
+        </a>
+
+        <a class="ft-social" href="https://youtube.com/@marcelndagijimana-m7b?si=mt0maBmjE5L70kNH" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="10" width="44" height="28" rx="8" fill="#FF0000"></rect>
+            <path fill="#fff" d="M20 17.5l11 6.5-11 6.5z"></path>
+          </svg>
+        </a>
+
+        <a class="ft-social" href="https://www.tiktok.com/@lee52397?_r=1&amp;_t=ZS-98LlrXPt7lH" aria-label="TikTok" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="24" fill="#010101"></circle>
+            <path fill="#25F4EE" d="M27.5 11h4.1c.3 2.6 1.9 4.8 4.4 5.7v4.2c-1.8-.1-3.4-.7-4.8-1.7v9.1c0 4.6-3.7 8.3-8.3 8.3s-8.3-3.7-8.3-8.3 3.7-8.3 8.3-8.3c.4 0 .8 0 1.2.1v4.3c-.4-.1-.8-.2-1.2-.2-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4V11z"></path>
+            <path fill="#FE2C55" d="M29 11h4.1c.3 2.6 1.9 4.8 4.4 5.7v4.2c-1.8-.1-3.4-.7-4.8-1.7v9.1c0 4.6-3.7 8.3-8.3 8.3s-8.3-3.7-8.3-8.3 3.7-8.3 8.3-8.3c.4 0 .8 0 1.2.1v4.3c-.4-.1-.8-.2-1.2-.2-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4V11z" opacity="0"></path>
+            <path fill="#FFFFFF" d="M28.2 11h4.1c.3 2.6 1.9 4.8 4.4 5.7v4.2c-1.8-.1-3.4-.7-4.8-1.7v9.1c0 4.6-3.7 8.3-8.3 8.3s-8.3-3.7-8.3-8.3 3.7-8.3 8.3-8.3c.4 0 .8 0 1.2.1v4.3c-.4-.1-.8-.2-1.2-.2-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4V11z" opacity="0.9"></path>
+          </svg>
+        </a>
+
+      </div>
+
+      <div class="ft-badge"><div class="ft-badge-dot"></div>All systems operational</div>
+    </div>
+
+    <div>
+      <div class="ft-col-title">Shop</div>
+      <ul class="ft-links">
+        <li><a href="smartphone.html">Smartphones</a></li>
+        <li><a href="Laptops.html">Laptops</a></li>
+        <li><a href="Audio.html">Audio</a></li>
+        <li><a href="Accessories.html">Accessories</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="ft-col-title">Support</div>
+      <ul class="ft-links">
+        <li><a href="Help Center.html">Help Center</a></li>
+        <li><a href="Warranty.html">Warranty</a></li>
+        <li><a href="contact us.html">Contact Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-col-title">Company</div>
+      <ul class="ft-links">
+        <li><a href="About.html">About</a></li>
+        <li><a href="Careers.html">Careers</a></li>
+        <li><a href="Investors.html">Investors</a></li>
+      </ul>
+      </div>
+    </div>
+
+  
+
+  <div class="ft-bottom">
+    <div class="ft-copy">© 2026 NEXUS Electronics. All rights reserved.</div>
+    <div class="ft-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="Terms of Service.html">Terms of Service</a>
+      <a href="Cookies.html">Cookies</a>
+    </div>
+  </div>
+
+  <div class="ft-credit">Coded by Lee and Benit</div>
+
+</footer>
+
+<footer style="background:#131313; color:#fafaf9; text-align:center; padding:15px;">
+  <p>© 2026 NEXUS Electronics Store</p>
+  <p>Contact: info@nexus.com</p>
+  <p> contact: 0783335262654</p>
+  <p> contact: 0785678765677</p>
+</footer>
+
+</body></html>
+</body></html>

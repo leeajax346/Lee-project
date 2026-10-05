@@ -1,0 +1,96 @@
+<a href="continue with Google.html"><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookies Consent</title>
+
+<style>
+#cookie-banner{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#222;
+    color:#fff;
+    padding:20px;
+    text-align:center;
+    box-sizing:border-box;
+}
+
+#cookie-banner button{
+    margin:5px;
+    padding:10px 20px;
+    border:none;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.accept{
+    background:#28a745;
+    color:white;
+}
+
+.reject{
+    background:#dc3545;
+    color:white;
+}
+
+.settings{
+    background:#007bff;
+    color:white;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Welcome to Nex-us Electronics</h1>
+
+<div id="cookie-banner">
+    <p>
+        We use cookies to improve your experience. You can accept, reject,
+        or manage your cookie preferences.
+    </p>
+
+    <button class="accept" onclick="acceptCookies()">Accept</button>
+
+    <button class="reject" onclick="rejectCookies()">Reject</button>
+
+    <button class="settings" onclick="cookieSettings()">Cookie Settings</button>
+</div>
+
+<script>
+function getCookie(name) {
+    let cookies = document.cookie.split(";");
+
+    for (let cookie of cookies) {
+        let c = cookie.trim();
+        if (c.startsWith(name + "=")) {
+            return c.substring(name.length + 1);
+        }
+    }
+    return null;
+}
+
+if (getCookie("cookieConsent")) {
+    document.getElementById("cookie-banner").style.display = "none";
+}
+
+function acceptCookies() {
+    document.cookie = "cookieConsent=accepted; max-age=31536000; path=/; SameSite=Lax";
+    document.getElementById("cookie-banner").style.display = "none";
+}
+
+function rejectCookies() {
+    document.cookie = "cookieConsent=rejected; max-age=31536000; path=/; SameSite=Lax";
+    document.getElementById("cookie-banner").style.display = "none";
+}
+
+function cookieSettings() {
+    alert("Here you can add your cookie preference options.");
+}
+</script>
+
+</body>
+</html></a>

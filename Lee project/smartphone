@@ -1,0 +1,44 @@
+<html><head></head><body><div class="ft-socials">
+
+  <a class="ft-social" href="https://www.facebook.com/profile.php?id=100088697983212" aria-label="Facebook">
+    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+      <circle cx="24" cy="24" r="24" fill="#1877F2"></circle>
+      <path fill="#fff" d="M27.3 24.9h-3.1v11.9h-4.9V24.9h-2.2V20.6h2.2v-2.5c0-3.3 1.4-5.3 5.3-5.3h3.3v4.3h-2.1c-1.5 0-1.6.6-1.6 1.6v1.9h3.7l-.6 4.3z"></path>
+    </svg>
+  </a>
+
+  <a class="ft-social" href="https://www.instagram.com/cheetah8319?igsh=MTMyN2UzOGZiNnZ5Ng==" aria-label="Instagram">
+    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+      <defs>
+        <linearGradient id="igGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#FFDD55"></stop>
+          <stop offset="30%" stop-color="#FF543E"></stop>
+          <stop offset="60%" stop-color="#C837AB"></stop>
+          <stop offset="100%" stop-color="#5B51D8"></stop>
+        </linearGradient>
+      </defs>
+      <rect x="2" y="2" width="44" height="44" rx="12" fill="url(#igGradient)"></rect>
+      <rect x="14" y="14" width="20" height="20" rx="6" fill="none" stroke="#fff" stroke-width="2.3"></rect>
+      <circle cx="24" cy="24" r="5.5" fill="none" stroke="#fff" stroke-width="2.3"></circle>
+      <circle cx="31" cy="17" r="1.6" fill="#fff"></circle>
+    </svg>
+  </a>
+
+  <a class="ft-social" href="https://youtube.com/@marcelndagijimana-m7b?si=mt0maBmjE5L70kNH" aria-label="YouTube">
+    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+      <rect x="2" y="10" width="44" height="28" rx="8" fill="#FF0000"></rect>
+      <path fill="#fff" d="M20 17.5l11 6.5-11 6.5z"></path>
+    </svg>
+  </a>
+
+  <a class="ft-social" href="https://www.tiktok.com/@lee52397?_r=1&amp;_t=ZS-98LlrXPt7lH" aria-label="TikTok">
+    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+      <circle cx="24" cy="24" r="24" fill="#010101"></circle>
+      <path fill="#25F4EE" d="M27.5 11h4.1c.3 2.6 1.9 4.8 4.4 5.7v4.2c-1.8-.1-3.4-.7-4.8-1.7v9.1c0 4.6-3.7 8.3-8.3 8.3s-8.3-3.7-8.3-8.3 3.7-8.3 8.3-8.3c.4 0 .8 0 1.2.1v4.3c-.4-.1-.8-.2-1.2-.2-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4V11z"></path>
+      <path fill="#FE2C55" d="M29 11h4.1c.3 2.6 1.9 4.8 4.4 5.7v4.2c-1.8-.1-3.4-.7-4.8-1.7v9.1c0 4.6-3.7 8.3-8.3 8.3s-8.3-3.7-8.3-8.3 3.7-8.3 8.3-8.3c.4 0 .8 0 1.2.1v4.3c-.4-.1-.8-.2-1.2-.2-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4V11z" opacity="0"></path>
+      <path fill="#FFFFFF" d="M28.2 11h4.1c.3 2.6 1.9 4.8 4.4 5.7v4.2c-1.8-.1-3.4-.7-4.8-1.7v9.1c0 4.6-3.7 8.3-8.3 8.3s-8.3-3.7-8.3-8.3 3.7-8.3 8.3-8.3c.4 0 .8 0 1.2.1v4.3c-.4-.1-.8-.2-1.2-.2-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4V11z" opacity="0.9"></path>
+    </svg>
+  </a>
+
+</div>
+</body></html>
